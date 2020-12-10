@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<th:block th:include="fragments/genericHead"></th:block>
+</head>
+<body>
+	<div class="container">
+		<div th:insert="fragments/entete.html"></div>
+		<h2>Nouvel utilisateur sauvegardé</h2>
+		nom :<span th:text="${user.nom}"></span><br/>
+		email :<span th:text="${user.mail}"></span>
+		
+		<div th:insert="fragments/genericJs.html"></div>
+	</div>
+
+</body>
+</html>

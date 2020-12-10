@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Vote!</title>
+<th:block th:include="fragments/genericHead"></th:block>
+</head>
+<body>
+	<div class="container">
+		<div th:insert="fragments/entete.html"></div>
+		<h1>Résumé de vos choix</h1>
+		<div class="mt-4">
+			<h4>
+				<span class="alert alert-warning">Vous devez encore valider vos choix
+					pour voter</span>
+			</h4>
+		</div>
+		<div class="mt-4">
+			<h4 th:text="${item.nature}"></h4>
+			<b> <span th:text="${item.nbQuestions}"></span> questions
+			</b>
+		</div>
+		<div class="mt-4">
+			<div th:each="q, rowStat: ${item.questions}" class="card mt-2">
+				<div class="card-body">
+					<h5 class="card-title">
+						Question <span th:text="${rowStat.index+1}"></span>
+					</h5>					
+					<span th:text="${q.qtext}"></span> : 
+					<h5 class="card-title">
+						Réponse 
+					</h5>
+					<div th:each="item : ${q.items}">
+						<span th:text="${item.questiontext}" th:if="${item.isChecked}"></span>
+					</div>
+					
+					<form method="get" th:action="@{/vote/voteStep}">
+						<input type="hidden" name="q" th:value="${rowStat.index}">
+						<button class="btn btn-secondary">modifier</button>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="pt-2">
+			<form method="get" th:action="@{/vote/voteConfirm}">
+				<button class="btn btn-primary btn-lg">Je valide mon vote</button>
+			</form>
+		</div>
+
+	</div>
+
+
+	<div th:insert="fragments/genericJs.html"></div>
+	<script src="js/form-validation.js"></script>
+</body>
+</html>

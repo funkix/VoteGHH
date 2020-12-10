@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<th:block th:include="fragments/genericHead"></th:block>
+</head>
+<body>
+	<div class="container">
+		<div th:insert="fragments/entete.html"></div>
+		
+		<h2>Liste des scrutins </h2>
+		
+		<div th:each="scrutin: ${items}" class="card" style="max-width: 700px">
+			<div class="card-header">
+				<span class="h4" th:text="${scrutin.nature}"></span>
+			</div>
+			<div class="card-body">
+				<div>
+					<span th:text="${scrutin.nbQuestions}"></span> questions
+				</div>
+			</div>
+			<div class="card-footer">
+				<div class="d-flex">
+					<div>
+						<form method="get" th:action="@{/admin/scrutins/resultats}">
+							<input type="hidden" name="scrid" th:value="${scrutin.id}">
+							<button type="submit" class="btn btn-primary">Voir les résultats </button>							
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:insert="fragments/genericJs.html"></div>
+	</div>
+
+</body>
+</html>

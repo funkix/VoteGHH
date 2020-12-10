@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Vote!</title>
+<th:block th:include="fragments/genericHead"></th:block>
+</head>
+<body>
+	<div class="container">
+		<div th:insert="fragments/entete.html"></div>
+		<div class="jumbotron jumbotron-fluid">
+			<div class="container">
+				<h1 class="display-4">Gest'Help Vote</h1>
+				<p class="lead">L'application Gest'Help</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6">
+				<h1 class="h3 mb-3 font-weight-normal">Votes dématérialisés et
+					sécurisés</h1>
+			</div>
+			<div class="col-sm-6">
+				<div style="max-width: 300px">
+					<div sec:authorize="!isAuthenticated()">
+						<form class="form-signin" name="login" action="perform_login"
+							method="POST">
+							<p th:if="${param.error}" class="text-danger">
+								Le mot de passe est incorrect.<br /> Veuillez vérifier les
+								informations saisies
+							</p>
+							<h1 class="h3 mb-3 font-weight-normal">Identifiez-vous</h1>
+							<label for="inputEmail" class="sr-only">Email</label> <input
+								type="text" name="username" id="inputEmail" class="form-control"
+								placeholder="Email " required autofocus> <label
+								for="inputPassword" class="sr-only">Mot de passe</label> <input
+								type="password" name="password" id="inputPassword"
+								class="form-control" placeholder="Mot de passe" required>
+							<button class="btn  btn-primary " type="submit">
+								Connexion</button>							
+						</form>
+					</div>
+					<div sec:authorize="isAuthenticated()">
+						<div class="">
+							<a th:href="@{/loginSuccess}" class="h4 btn btn-primary">Accés
+								au vote</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:insert="fragments/genericJs.html"></div>
+	</div>
+
+
+	<script src="js/form-validation.js"></script>
+</body>
+</html>

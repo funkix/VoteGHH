@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Vote!</title>
+<th:block th:include="fragments/genericHead"></th:block>
+</head>
+<body>
+	<div class="container">
+		<div th:insert="fragments/entete.html"></div>
+		<h1>Vote vote est bien enregistré</h1>
+		<h3>La clé est 'XXXXX'</h3>
+
+		<a th:href="@{/vote/scrutins}" class="">retour à votre page des scrutins</a>
+	</div>
+
+
+	<div th:insert="fragments/genericJs.html"></div>
+	<script src="js/form-validation.js"></script>
+</body>
+</html>

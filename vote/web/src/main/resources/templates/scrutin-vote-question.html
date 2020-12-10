@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Vote!</title>
+<th:block th:include="fragments/genericHead"></th:block>
+</head>
+<body>
+	<div class="container">
+		<div th:insert="fragments/entete.html"></div>
+		<h1>Scrutin</h1>
+		<h4 th:text="${item.nature}"></h4>
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">
+					Question <span th:text="${item.questionIndex+1}"></span> / <span th:text="${item.nbQuestions}"></span>
+				</h5>
+				<p class="card-text">
+				<div th:if="${item.question.nbCheckedMaxExpected !=null}"
+					class="text-muted">
+					<div th:if="${item.question.nbCheckedMaxExpected ==1}">un
+						choix attendu</div>
+					<div
+						th:if="${item.question.nbCheckedMaxExpected >1 && item.question.nbCheckedMaxExpected>item.question.nbCheckedMinExpected}">
+						<span th:text="${item.question.nbCheckedMinExpected}"></span> à <span
+							th:text="${item.question.nbCheckedMaxExpected}"></span> choix
+						attendus
+					</div>
+					<div
+						th:if="${item.question.nbCheckedMaxExpected >1 && item.question.nbCheckedMaxExpected==item.question.nbCheckedMinExpected}">
+						<span
+							th:text="${item.question.nbCheckedMaxExpected}"></span> choix
+						attendus
+					</div>
+				</div>
+				</p>
+				<p class="card-text">
+					<span th:text="${item.question.qtext}"></span>
+				</p>
+				<form th:action="@{/vote/voteStep}"
+					th:object="${scrutinQuestionForm}" method="post">
+
+					<!-- id question -->
+					<input type="hidden" th:name="id"
+						th:value="${scrutinQuestionForm.id}" />
+					<!-- id scrutin -->
+					<input type="hidden" th:name="scrutinId"
+						th:value="${scrutinQuestionFormid}" />
+
+					<div th:if="${item.question.nbCheckedMax}>1">
+						<div th:each="item: ${item.question.items}" class="form-check">
+							<input class="form-check-input" type="checkbox"
+								name="checkResponses" th:value="${item.id}"
+								th:checked="${item.isChecked}" th:id="'id_'+${item.id}">
+							<label th:for="'id_'+${item.id}"><span
+								th:text="${item.questiontext}"></span></label>
+						</div>
+					</div>
+					<div th:if="${item.question.nbCheckedMax}<=1">
+						<div th:each="item: ${item.question.items}" class="form-check">
+							<input class="form-check-input" type="radio"
+								name="checkResponses" th:value="${item.id}"
+								th:checked="${item.isChecked}" th:id="'id_'+${item.id}">
+							<label th:for="'id_'+${item.id}"><span
+								th:text="${item.questiontext}"></span></label>
+						</div>
+					</div>
+
+					<div th:if="${#fields.hasErrors('checkResponses')}"
+						th:errors="${scrutinQuestionForm.checkResponses}"
+						class="text-danger">Erreur</div>
+					<div class="mt-2">
+						<button type="submit" class="btn btn-primary">Voter</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<form method="get" th:action="@{/vote/voteStep}">
+			<input type="hidden" name="q" th:value="${item.questionIndex-1}">
+			<button type="submit" class="btn btn-secondary mt-2"
+				th:if="${item.questionIndex > 0}">&lt; precedent</button>
+		</form>
+
+	</div>
+
+
+
+
+	<div th:insert="fragments/genericJs.html"></div>
+	<script src="js/form-validation.js"></script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>insérer un utilisateur</title>
+<th:block th:include="fragments/genericHead"></th:block>
+</head>
+<body>
+	<div class="container">
+		<div th:insert="fragments/entete.html"></div>
+		<h2>Créer un nouveau utilisateur</h2>
+		<form th:object="${userForm}" action="saveUser" method="post"
+			autocomplete="off" id="newClient" name="newClient">
+
+			<div style="max-width: 500px">
+
+				<!-- email -->
+				<div class="form-group row">
+					<label for="email" class="col-sm-2 col-form-label">Email</label>
+					<div class="col-sm-10">
+						<input th:field="*{mail}" type="email" placeholder="email"
+							class="form-control" id="email">
+						<div th:if="${#fields.hasErrors('mail')}" th:errors="*{mail}"
+							class="text-danger">Mail Error</div>
+					</div>
+				</div>
+				<!-- mdp -->
+				<div class="form-group row">
+					<label for="prenom" class="col-sm-2 col-form-label">Password</label>
+					<div class="col-sm-10">
+						<input th:field="*{mdp}" type="text" placeholder="Mot de passe"
+							class="form-control" id="mdp">
+						<div th:if="${#fields.hasErrors('mdp')}" th:errors="*{mdp}"
+							class="text-danger">Error</div>
+					</div>
+				</div>
+				<!-- nom -->
+				<div class="form-group row">
+					<label for="name" class="col-sm-2 col-form-label">Nom</label>
+					<div class="col-sm-10">
+						<input th:field="*{nom}" type="text" placeholder="nom"
+							class="form-control" id="name">
+						<div th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"
+							class="text-danger">Error</div>
+					</div>
+				</div>
+				<!-- prenom -->
+				<div class="form-group row">
+					<label for="prenom" class="col-sm-2 col-form-label">Prénom</label>
+					<div class="col-sm-10">
+						<input th:field="*{prenom}" type="text" placeholder="prenom"
+							class="form-control" id="prenom">
+						<div th:if="${#fields.hasErrors('prenom')}" th:errors="*{prenom}"
+							class="text-danger">Error</div>
+					</div>
+				</div>
+				<!-- ROLE -->
+				<div class="form-group row">
+					<label for="prenom" class="col-sm-2 col-form-label">Rôle</label>
+					<div class="col-sm-10">
+						<select th:field="*{role}" class="form-control">
+							<option th:value="'ROLE_VOTE'" th:text="Votant"></option>
+							<option th:value="'ROLE_ADMIN'" th:text="Admin"></option>
+						</select>
+
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-sm-2"></div>
+					<div class="col-sm-10">
+						<input type="submit" value="Valider" class="btn btn-primary">
+					</div>
+				</div>
+			</div>
+		</form>
+
+		<div th:insert="fragments/genericJs.html"></div>
+	</div>
+
+</body>
+</html>
