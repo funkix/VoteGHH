@@ -1,13 +1,10 @@
 package com.gesthelp.vote.domain;
 
-
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,8 +23,8 @@ public class QuestionResp {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
-	
-	@NotNull 
+
+	@NotNull
 	Long utilisateurId;
 
 	@ManyToOne
@@ -42,15 +39,19 @@ public class QuestionResp {
 
 	Integer nbChecked;
 
-	// @OneToMany(mappedBy = "response")
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "response")
 	List<QuestionRespItem> checked;
 
 	@ManyToOne
-	@JoinColumn(name = "question_id", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "scrutin_id", nullable = false, insertable = false, updatable = false)
 	Scrutin scrutin;
 
 	@Column(name = "scrutin_id")
 	Long scrutinId;
 
+	@Override
+	public String toString() {
+		return "QuestionResp [id=" + id + ", utilisateurId=" + utilisateurId + ", questionId=" + questionId + ", responseDate=" + responseDate
+				+ ", nbChecked=" + nbChecked + ", checked=" + checked + ", scrutinId=" + scrutinId + "]";
+	}
 }

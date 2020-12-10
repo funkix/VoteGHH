@@ -29,5 +29,10 @@
 			<artifactId>jcommander</artifactId>
 			<version>1.72</version>
 		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+
 	</dependencies>
 </project>

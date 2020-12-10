@@ -1,6 +1,5 @@
 package com.gesthelp.vote.domain;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,7 +26,12 @@ public class QuestionItem {
 	@Column(name = "question_id", insertable = false, updatable = false)
 	Long questionId;
 
-	//@Column(name = "questiontext")
+	// @Column(name = "questiontext")
 	String questiontext;
+
+	@Override
+	public String toString() {
+		return "QuestionItem [id=" + id + ", questionId=" + questionId + ", questiontext=" + questiontext + "]";
+	}
 
 }

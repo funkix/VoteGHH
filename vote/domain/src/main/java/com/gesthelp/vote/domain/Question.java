@@ -1,6 +1,5 @@
 package com.gesthelp.vote.domain;
 
-
 import java.util.List;
 
 import javax.persistence.Column;
@@ -48,5 +47,11 @@ public class Question {
 
 	@OneToMany(mappedBy = "question")
 	List<QuestionItem> choices;
+
+	@Override
+	public String toString() {
+		return "Question [id=" + id + ", numquestion=" + numquestion + ", questiontext=" + questiontext + ", scrutinId=" + scrutinId
+				+ ", nbCheckedMin=" + nbCheckedMin + "]";
+	}
 
 }

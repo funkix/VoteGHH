@@ -1,6 +1,5 @@
 package com.gesthelp.vote.domain;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,5 +32,10 @@ public class QuestionRespItem {
 	@ManyToOne
 	@JoinColumn(name = "question_choix_id", nullable = false, insertable = false, updatable = false)
 	QuestionItem checkedItem;
+
+	@Override
+	public String toString() {
+		return "QuestionRespItem [id=" + id + ", questionReponseId=" + questionReponseId + ", questionItemId=" + questionItemId + "]";
+	}
 
 }
