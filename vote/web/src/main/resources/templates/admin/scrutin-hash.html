@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<th:block th:include="fragments/genericHead"></th:block>
+<style>
+.hash-key-block {
+	min-height: 50px;
+	max-height: 250px;
+	overflow: scroll;
+	white-space: pre-wrap;
+}
+</style>
+
+</head>
+<body>
+	<div class="container">
+		<div th:insert="fragments/entete.html"></div>
+		<h2>Hash du scrutin</h2>
+		<div th:if="${hashMismatch || hashBufferMismatch}"
+			class="alert alert-danger">les hashs ne correspondent pas</div>
+
+		<div th:if="${param.sd}"
+			class="alert alert-success alert-dismissible fade show">
+			Valeurs enregistrées
+			<button type="button" class="close" data-dismiss="alert"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+
+
+		<h3 class="mt-3">Valeurs enregistrées</h3>
+		<div class="card">
+			<div class="card-body">
+				<h5>Hash</h5>
+				<span th:text="${scrutin.hash} ? ${scrutin.hash} : 'non enregistré'"></span>
+
+				<h4>Clé du hash</h4>
+				<div class="border hash-key-block"
+					th:text="${scrutin.hashBuffer}? ${scrutin.hashBuffer} : 'non enregistré'">
+				</div>
+				<a href="#"
+					th:onclick="navigator.clipboard.writeText([[${scrutin.hashBuffer}]]);">copier
+					dans le presse-papier</a>
+			</div>
+			<div class="card-footer">
+				<a th:href="@{scrutin-hash-save(scrid=${scrutin.id})}"
+					class="btn btn-secondary">Mettre à jour l'enregistrement</a>
+			</div>
+		</div>
+
+		<h3 class="mt-5">Calculé (live)</h3>
+		<div class="card">
+			<div class="card-body">
+				<h4>Hash</h4>
+				<span th:text="${scrutinHash}"
+					th:classappend="${hashMismatch ? 'text-danger' : 'text-success'}"></span>
+				<h4>Clé du hash</h4>
+				<div class="border hash-key-block" th:text="${scrutinHashBuffer}"></div>
+				<a href="#"
+					th:onclick="navigator.clipboard.writeText([[${scrutinHashBuffer}]]);">copier
+					dans le presse-papier</a>
+			</div>
+		</div>
+
+	</div>
+	<div th:insert="fragments/genericJs.html"></div>
+</body>
+</html>

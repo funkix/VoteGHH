@@ -1,17 +1,19 @@
 package com.gesthelp.vote.service;
 
-
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.gesthelp.vote.domain.Question;
+import com.gesthelp.vote.domain.QuestionItem;
 import com.gesthelp.vote.domain.QuestionResp;
 import com.gesthelp.vote.domain.QuestionRespItem;
 import com.gesthelp.vote.domain.Scrutin;
@@ -42,6 +44,10 @@ public class ScrutinService {
 	private QuestionRespRepository questionRespRepository;
 	@Autowired
 	private QuestionRespItemRepository questionRespItemRepository;
+
+	public Scrutin findScrutinById(Long scrutinId) {
+		return repository.findById(scrutinId).orElse(null);
+	}
 
 	public ScrutinVote saveUserScrutin(Utilisateur u, Scrutin s) {
 		ScrutinVote sv = new ScrutinVote();
@@ -157,5 +163,36 @@ public class ScrutinService {
 
 	public Page<Scrutin> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
+	}
+
+	public String scrutinHashBuffer(Scrutin s) {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(s.getNature()).append("\n");
+		for (Question q : s.getQuestions()) {
+			buffer.append(q.getQuestiontext().toLowerCase().trim()).append("\n");
+			for (QuestionItem option : q.getChoices()) {
+				buffer.append(option.getQuestiontext().toLowerCase().trim()).append("\n");
+			}
+		}
+		return buffer.toString();
+	}
+
+	public String hashBuffer(String buffer) {
+		return DigestUtils.sha256Hex(buffer);
+	}
+
+	public String saveScrutinHash(Scrutin scr) {
+		if (!scr.getPhase().equals(ScrutinEtat.RECETTE)) {
+			throw new RuntimeException("opération interdite pour le scrutin " + scr.getId());
+		}
+		String scrutinHashBuffer = this.scrutinHashBuffer(scr);
+		log.info("saveScrutinHash buffer=\n" + scrutinHashBuffer);
+		String sha256hex = this.hashBuffer(scrutinHashBuffer);
+		log.info("saveScrutinHash sha256hex=" + sha256hex);
+		scr.setHashBuffer(scrutinHashBuffer);
+		scr.setHash(sha256hex);
+		this.repository.save(scr);
+		return scrutinHashBuffer;
+
 	}
 }

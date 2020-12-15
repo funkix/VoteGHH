@@ -13,6 +13,7 @@ public class ScrutinInfoDto {
 	Date dateOuverture;
 	Date dateFermeture;
 	ScrutinEtat phase;
-	Date dateCreation;	
+	Date dateCreation;
 	Integer nbQuestions;
+	String hashBuffer, hash;
 }

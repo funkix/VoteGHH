@@ -1,6 +1,5 @@
 package com.gesthelp.vote.web;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class DtoUtils {
 
 	public static ScrutinInfoDto dto(Scrutin s) {
 		ScrutinInfoDto dto = new ScrutinInfoDto();
-		dto .setId(s.getId());
+		dto.setId(s.getId());
 		dto.setDateCreation(s.getDateCreation());
 		dto.setDateFermeture(s.getDateFermeture());
 		dto.setDateOuverture(s.getDateOuverture());
@@ -39,6 +38,8 @@ public class DtoUtils {
 		// TODO :
 		dto.setNbQuestions(s.getQuestions().size());
 		dto.setPhase(s.getPhase());
+		dto.setHash(s.getHash());
+		dto.setHashBuffer(s.getHashBuffer());
 		return dto;
 	}
 

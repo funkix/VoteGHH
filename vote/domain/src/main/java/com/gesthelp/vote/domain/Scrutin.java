@@ -1,6 +1,5 @@
 package com.gesthelp.vote.domain;
 
-
 import java.sql.Date;
 import java.util.List;
 import java.util.Set;
@@ -33,23 +32,27 @@ public class Scrutin {
 	@Column(name = "date_heure_creation")
 	Date dateCreation;
 
+	@Column(name = "hash")
+	String hash;
+
+	@Column(name = "hash_buffer")
+	String hashBuffer;
+
 //	@ManyToMany(mappedBy = "scrutins", fetch = FetchType.LAZY)
 //	private Set<Utilisateur> votants;
-	
+
 	@OneToMany(mappedBy = "scrutin")
 	Set<ScrutinVote> scrutinVote;
 
-	@OneToMany(mappedBy="scrutin")
+	@OneToMany(mappedBy = "scrutin")
 	@OrderBy("numquestion")
 	List<Question> questions;
 
-	
 	@Override
 	public String toString() {
-		return "Scrutin [id=" + id + ", nature=" + nature + ", dateOuverture=" + dateOuverture + ", dateFermeture="
-				+ dateFermeture + ", phase=" + phase + "]";
+		return "Scrutin [id=" + id + ", nature=" + nature + ", dateOuverture=" + dateOuverture + ", dateFermeture=" + dateFermeture + ", phase="
+				+ phase + "]";
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -67,7 +70,6 @@ public class Scrutin {
 			return false;
 		return true;
 	}
-
 
 	@Override
 	public int hashCode() {
