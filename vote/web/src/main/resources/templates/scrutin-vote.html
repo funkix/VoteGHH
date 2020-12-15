@@ -1,26 +1,24 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/base}">
 
 <head>
-<title>Vote!</title>
-<th:block th:include="fragments/genericHead"></th:block>
 </head>
 <body>
-	<div class="container">
-		<div th:insert="fragments/entete.html"></div>
+	<div layout:fragment="page_content">
 		<h1>Scrutin</h1>
 		<h4 th:text="${item.nature}"></h4>
-
-		
 
 		<form th:action="@{/vote/dovote}" th:object="${scrutinQuestionsDto}"
 			method="post">
 			<!--http://forum.thymeleaf.org/Fields-object-functions-Spring-td3302513.html#a3304174 -->
-<!-- 			 <ul>
+			<!-- 			 <ul>
 				<li th:each="err : ${#fields.errors('*')}" th:text="${err}"
 					class="text-danger">Input is incorrect</li>
 			</ul> 
- -->			<input type="hidden" th:name="|scrutinId|"
+ -->
+			<input type="hidden" th:name="|scrutinId|"
 				th:value="${scrutinQuestionsDto.getScrutinId()}" />
 
 
@@ -80,11 +78,5 @@
 
 		</form>
 	</div>
-
-
-
-
-	<div th:insert="fragments/genericJs.html"></div>
-	<script src="js/form-validation.js"></script>
 </body>
 </html>

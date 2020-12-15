@@ -1,13 +1,12 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/base}">
 
 <head>
-<title>Vote!</title>
-<th:block th:include="fragments/genericHead"></th:block>
 </head>
 <body>
-	<div class="container">
-		<div th:insert="fragments/entete.html"></div>
+	<div layout:fragment="page_content">
 		<h1>Mes scrutins</h1>
 
 		<span th:if="${#lists.isEmpty(items)}">Aucun scrutin en cours</span>
@@ -45,9 +44,5 @@
 			</div>
 		</div>
 	</div>
-
-
-	<div th:insert="fragments/genericJs.html"></div>
-	<script src="js/form-validation.js"></script>
 </body>
 </html>

@@ -1,17 +1,12 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/base}">
 <head>
-<title>Vote!</title>
-<th:block th:include="fragments/genericHead"></th:block>
 </head>
 <body>
-	<div class="container">
-		<div th:insert="fragments/entete.html"></div>
-
+	<div layout:fragment="page_content">
 		<h1 class="mt-5">Scrutation</h1>
-
-
 		<div class="card">
 			<div class="card-header">
 				<span class="h4" th:text="${scrutin.nature}"></span>
@@ -25,17 +20,12 @@
 						th:text="${#dates.format(scrutin.dateOuverture, 'dd-MM-yyyy')}"></span>,
 					fermeture <span
 						th:text="${#dates.format(scrutin.dateFermeture, 'dd-MM-yyyy')}"></span>
-
 				</div>
-				
 			</div>
 		</div>
-
 		<h1 class="mt-5">Résultats</h1>
 		...
 
 	</div>
-	<div th:insert="fragments/genericJs.html"></div>
-	<script src="js/form-validation.js"></script>
 </body>
 </html>

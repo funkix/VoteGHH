@@ -1,12 +1,11 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{base-error}">
 <head>
-<title>Gest'Help vote</title>
-<th:block th:include="fragments/genericHead"></th:block>
 </head>
 <body>
-	<div class="container">
-		<div th:insert="fragments/entete.html"></div>
+	<div layout:fragment="page_error">
 		<div class="mt-5">
 			<span class="h2 p-2 alert-warning">Le scrutin a déjà été voté</span>
 		</div>

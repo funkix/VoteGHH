@@ -1,19 +1,19 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/base}">
 
 <head>
-<title>Vote!</title>
-<th:block th:include="fragments/genericHead"></th:block>
 </head>
 <body>
-	<div class="container">
-		<div th:insert="fragments/entete.html"></div>
+	<div layout:fragment="page_content">
 		<h1>Scrutin</h1>
 		<h4 th:text="${item.nature}"></h4>
 		<div class="card">
 			<div class="card-body">
 				<h5 class="card-title">
-					Question <span th:text="${item.questionIndex+1}"></span> / <span th:text="${item.nbQuestions}"></span>
+					Question <span th:text="${item.questionIndex+1}"></span> / <span
+						th:text="${item.nbQuestions}"></span>
 				</h5>
 				<p class="card-text">
 				<div th:if="${item.question.nbCheckedMaxExpected !=null}"
@@ -28,9 +28,8 @@
 					</div>
 					<div
 						th:if="${item.question.nbCheckedMaxExpected >1 && item.question.nbCheckedMaxExpected==item.question.nbCheckedMinExpected}">
-						<span
-							th:text="${item.question.nbCheckedMaxExpected}"></span> choix
-						attendus
+						<span th:text="${item.question.nbCheckedMaxExpected}"></span>
+						choix attendus
 					</div>
 				</div>
 				</p>
@@ -83,10 +82,5 @@
 
 	</div>
 
-
-
-
-	<div th:insert="fragments/genericJs.html"></div>
-	<script src="js/form-validation.js"></script>
 </body>
 </html>

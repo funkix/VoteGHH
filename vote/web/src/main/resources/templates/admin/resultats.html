@@ -1,14 +1,12 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/base}">
 
 <head>
-
-<th:block th:include="fragments/genericHead"></th:block>
 </head>
 <body>
-	<div class="container">
-		<div th:insert="fragments/entete.html"></div>
-
+	<div layout:fragment="page_content">
 		<h2>Résultat de scrutin</h2>
 
 		<div class="card" style="max-width: 700px">
@@ -40,8 +38,6 @@
 				</div>
 			</div>
 		</div>
-		<div th:insert="fragments/genericJs.html"></div>
 	</div>
-
 </body>
 </html>

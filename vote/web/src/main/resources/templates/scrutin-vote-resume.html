@@ -1,18 +1,17 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/base}">
 
 <head>
-<title>Vote!</title>
-<th:block th:include="fragments/genericHead"></th:block>
 </head>
 <body>
-	<div class="container">
-		<div th:insert="fragments/entete.html"></div>
+	<div layout:fragment="page_content">
 		<h1>Résumé de vos choix</h1>
 		<div class="mt-4">
 			<h4>
-				<span class="alert alert-warning">Vous devez encore valider vos choix
-					pour voter</span>
+				<span class="alert alert-warning">Vous devez encore valider
+					vos choix pour voter</span>
 			</h4>
 		</div>
 		<div class="mt-4">
@@ -25,15 +24,13 @@
 				<div class="card-body">
 					<h5 class="card-title">
 						Question <span th:text="${rowStat.index+1}"></span>
-					</h5>					
-					<span th:text="${q.qtext}"></span> : 
-					<h5 class="card-title">
-						Réponse 
 					</h5>
+					<span th:text="${q.qtext}"></span> :
+					<h5 class="card-title">Réponse</h5>
 					<div th:each="item : ${q.items}">
 						<span th:text="${item.questiontext}" th:if="${item.isChecked}"></span>
 					</div>
-					
+
 					<form method="get" th:action="@{/vote/voteStep}">
 						<input type="hidden" name="q" th:value="${rowStat.index}">
 						<button class="btn btn-secondary">modifier</button>
@@ -46,11 +43,6 @@
 				<button class="btn btn-primary btn-lg">Je valide mon vote</button>
 			</form>
 		</div>
-
 	</div>
-
-
-	<div th:insert="fragments/genericJs.html"></div>
-	<script src="js/form-validation.js"></script>
 </body>
 </html>
