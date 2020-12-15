@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,7 +32,6 @@ import lombok.extern.java.Log;
 
 @Service
 @Log
-@Transactional
 public class ScrutinService {
 	@Autowired
 	private ScrutinRepository repository;
@@ -86,9 +83,9 @@ public class ScrutinService {
 		return scrutinVoteRepository.findById(new ScrutinVoteKey(scrutinId, userId)).orElse(null);
 	}
 
-	public boolean vote(Long userId, Long scrutinId, List<QuestionDto> questions) {
+	public ScrutinVote vote(Long userId, Long scrutinId, List<QuestionDto> questions) {
 		if (isVoteComplete(userId, scrutinId, questions)) {
-			return false;
+			return null;
 		}
 		ScrutinVote vote = scrutinVoteRepository.findById(new ScrutinVoteKey(scrutinId, userId)).orElse(null);
 		if (vote == null) {
@@ -99,8 +96,7 @@ public class ScrutinService {
 			throw new DejaVoteException();
 		}
 		// maj scrutin vote date ("a voté")
-		this.repository.setScrutinVoteDate(userId, scrutinId, new Date());
-
+		StringBuffer responseHashBuffer = new StringBuffer();
 		for (QuestionDto q : questions) {
 			QuestionResp resp = new QuestionResp();
 			resp.setUtilisateurId(userId);
@@ -111,16 +107,20 @@ public class ScrutinService {
 			resp.setNbChecked(nbChecked.intValue());
 			QuestionResp saved = this.questionRespRepository.save(resp);
 			List<QuestionItemDto> checkedItems = q.getItems().stream().filter(item -> item.getIsChecked()).collect(Collectors.toList());
+			responseHashBuffer.append(q.getQtext()).append("\n");
 			checkedItems.forEach(item -> {
 				QuestionRespItem r = new QuestionRespItem();
 				r.setQuestionItemId(item.getId());
 				r.setQuestionReponseId(saved.getId());
 				this.questionRespItemRepository.save(r);
+				responseHashBuffer.append(item.getQuestiontext()).append("\n");
 			});
 			log.info("saving resp " + resp);
 		}
-
-		return true;
+		log.info("saving vote responseHashBuffer :\n" + responseHashBuffer);
+		this.repository.setScrutinVoteDate(userId, scrutinId, new Date(), this.hashBuffer(responseHashBuffer.toString()));
+		vote = this.scrutinVoteRepository.findById(new ScrutinVoteKey(scrutinId, userId)).orElse(null);
+		return vote;
 	}
 
 	private boolean isVoteComplete(Long userId, Long scrutinId, List<QuestionDto> questions) {
@@ -150,15 +150,6 @@ public class ScrutinService {
 			return false;
 		}
 		return false;
-	}
-
-	public void aVote(Long utilisateurId, Long scrutinId) {
-		ScrutinVote vote = this.findScrutinVote(utilisateurId, scrutinId);
-		if (vote.getVoteDate() != null) {
-			log.warning("tentative de second vote, utilisateurId=" + utilisateurId + ", scrutinId=" + scrutinId);
-			throw new RuntimeException("scrutin déja voté");
-		}
-		this.repository.setScrutinVoteDate(utilisateurId, scrutinId, new Date());
 	}
 
 	public Page<Scrutin> findAll(Pageable pageable) {

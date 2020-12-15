@@ -1,10 +1,10 @@
 package com.gesthelp.vote.web;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,11 +34,11 @@ import lombok.extern.java.Log;
 
 @Controller
 @RequestMapping("vote")
+@Transactional
 @Log
 public class VotantController extends BaseController {
 	@Autowired
 	private ScrutinService scrutinService;
-	
 
 	@GetMapping("/scrutins")
 	public String scrutins(Authentication authentication, Model model) {
@@ -59,18 +59,18 @@ public class VotantController extends BaseController {
 	 * accès à une question du vote en cours (session)
 	 */
 	@GetMapping("voteStep")
-	public String voteStep(@RequestParam(name = "scrid", required = false) Long scrutinId,
-			@RequestParam(name = "q", required = false) String resume, Model model) {
+	public String voteStep(@RequestParam(name = "scrid", required = false) Long scrutinId, @RequestParam(name = "q", required = false) String resume,
+			Model model) {
 		log.info("voteStep IN scrid=" + scrutinId + ", q=" + resume);
 		// scrutin
 		ScrutinSessionDto sessionScrDto = getSessionScrutin(scrutinId, resume);
 		ScrutinQuestionForm fo = dto(sessionScrDto.getId(), sessionScrDto.getQuestion().getId());
 		// reponse
-		QuestionDto resp = sessionScrDto.getQuestions().stream()
-				.filter(s -> s.getId().equals(sessionScrDto.getQuestion().getId())).findFirst().orElse(null);
+		QuestionDto resp = sessionScrDto.getQuestions().stream().filter(s -> s.getId().equals(sessionScrDto.getQuestion().getId())).findFirst()
+				.orElse(null);
 		if (resp != null && resp.getItems() != null && !resp.getItems().isEmpty()) {
-			fo.setCheckResponses(resp.getItems().stream().filter(r -> r.getIsChecked()).map(r -> "" + r.getQuestionId())
-					.collect(Collectors.toList()));
+			fo.setCheckResponses(
+					resp.getItems().stream().filter(r -> r.getIsChecked()).map(r -> "" + r.getQuestionId()).collect(Collectors.toList()));
 		}
 		model.addAttribute("item", sessionScrDto);
 		model.addAttribute("scrutinQuestionForm", fo);
@@ -86,14 +86,13 @@ public class VotantController extends BaseController {
 		// scrutin
 		ScrutinSessionDto scrDto = getSessionScrutin(null, null);
 		// on retrouve la question encours
-		QuestionDto question = scrDto.getQuestions().stream().filter(s -> s.getId().equals(form.getId())).findFirst()
-				.orElse(null);
+		QuestionDto question = scrDto.getQuestions().stream().filter(s -> s.getId().equals(form.getId())).findFirst().orElse(null);
 		if (question == null) {
 			throw new VoteRuntimeException("question_not_found", "question_not_found " + form.getId());
 		}
 		// on met a jour les "item checked"
-		question.getItems().forEach(item -> item.setIsChecked(
-				form.getCheckResponses() != null && form.getCheckResponses().contains("" + item.getId())));
+		question.getItems()
+				.forEach(item -> item.setIsChecked(form.getCheckResponses() != null && form.getCheckResponses().contains("" + item.getId())));
 		this.validate(form, bindingResult, question);
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("scrutinQuestionForm", form);
@@ -120,8 +119,7 @@ public class VotantController extends BaseController {
 	}
 
 	private void validate(ScrutinQuestionForm form, BindingResult bindingResult, QuestionDto resp) {
-		int nbCheckedResp = (form.getCheckResponses() == null || form.getCheckResponses().isEmpty()) ? 0
-				: form.getCheckResponses().size();
+		int nbCheckedResp = (form.getCheckResponses() == null || form.getCheckResponses().isEmpty()) ? 0 : form.getCheckResponses().size();
 		if (resp.getNbCheckedMin().intValue() > 0) {
 			if (resp.getNbCheckedMin() == 1 && nbCheckedResp == 0) {
 				bindingResult.rejectValue("checkResponses", "notempty");
@@ -148,8 +146,11 @@ public class VotantController extends BaseController {
 	public String voteConfirmStep(Model model) {
 		ScrutinSessionDto scrDto = getSessionScrutin(null, null);
 		// this.scrutinService.aVote(getUserId(), scrDto.getId());
-		this.scrutinService.vote(getUserId(), scrDto.getId(), scrDto.getQuestions());
-		super.setSessionObject(SCRUTIN_SESSION_KEY, null);
+		ScrutinVote sv = this.scrutinService.vote(getUserId(), scrDto.getId(), scrDto.getQuestions());
+		log.info("voteConfirmStep ScrutinVote " + sv);
+		model.addAttribute("voteDate", sv.getVoteDate());
+		model.addAttribute("voteHash", sv.getVoteHash());
+		// super.setSessionObject(SCRUTIN_SESSION_KEY, null);
 		return "scrutin-vote-success";
 	}
 
@@ -239,8 +240,7 @@ public class VotantController extends BaseController {
 			// thymeleaf utility #errors ne fonctionne pas (a besoin de ce nom par défaut)
 			ScrutinQuestionsDto dto = dto(scrutin);
 			for (QuestionDto q : form.getQuestions()) {
-				List<QuestionDto> question = dto.getQuestions().stream().filter(q2 -> q2.getId().equals(q.getId()))
-						.collect(Collectors.toList());
+				List<QuestionDto> question = dto.getQuestions().stream().filter(q2 -> q2.getId().equals(q.getId())).collect(Collectors.toList());
 				if (!question.isEmpty()) {
 					q.setQtext(question.get(0).getQtext());
 				}

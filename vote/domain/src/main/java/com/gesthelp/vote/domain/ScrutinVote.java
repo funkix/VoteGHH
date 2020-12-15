@@ -1,6 +1,5 @@
 package com.gesthelp.vote.domain;
 
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -34,6 +33,9 @@ public class ScrutinVote {
 	@Column(name = "date_vote")
 	Date voteDate;
 
+	@Column(name = "hash_vote")
+	String voteHash;
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -61,7 +63,7 @@ public class ScrutinVote {
 
 	@Override
 	public String toString() {
-		return "ScrutinVote [id=" + id + ", voteDate=" + voteDate + "]";
+		return "ScrutinVote [id=" + id + ", voteDate=" + voteDate + ", voteHash=" + voteHash + "]";
 	}
 
 }
