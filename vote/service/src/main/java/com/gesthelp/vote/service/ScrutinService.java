@@ -169,6 +169,10 @@ public class ScrutinService {
 		return repository.findAll(pageable);
 	}
 
+	public List<Scrutin> listAdminScrutins(Long utilisateurId) {
+		return repository.listAdminUserScrutins(utilisateurId);
+	}
+
 	public String scrutinHashBuffer(Scrutin s) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(s.getNature()).append("\n");

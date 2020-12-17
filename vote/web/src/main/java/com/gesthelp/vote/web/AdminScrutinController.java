@@ -37,17 +37,19 @@ public class AdminScrutinController extends BaseController {
 	@Autowired
 	private UtilisateurService utilisateurService;
 
-	private void addScrutinList(Model model) {
-		Page<Scrutin> page = this.scrutinService.findAll(PageRequest.of(0, 10));
-		List<Scrutin> list = page.get().collect(Collectors.toList());
-		List<ScrutinInfoDto> dtolist = list.stream().map(s -> DtoUtils.dto(s)).collect(Collectors.toList());
-		model.addAttribute("items", dtolist);
-	}
+//	private void addScrutinList(Model model) {
+//		Page<Scrutin> page = this.scrutinService.findAll(PageRequest.of(0, 10));
+//		List<Scrutin> list = page.get().collect(Collectors.toList());
+//		List<ScrutinInfoDto> dtolist = list.stream().map(s -> DtoUtils.dto(s)).collect(Collectors.toList());
+//		model.addAttribute("items", dtolist);
+//	}
 
 	@GetMapping("/")
 	public String home(Model model) {
 		log.info("AdminScrutinController home IN");
-		addScrutinList(model);
+		List<Scrutin> list = this.scrutinService.listAdminScrutins(getUserId());
+		List<ScrutinInfoDto> dtolist = list.stream().map(s -> DtoUtils.dto(s)).collect(Collectors.toList());
+		model.addAttribute("items", dtolist);
 		return "/admin/scrutins";
 	}
 

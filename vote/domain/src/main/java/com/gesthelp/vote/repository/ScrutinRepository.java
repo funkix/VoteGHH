@@ -21,4 +21,12 @@ public interface ScrutinRepository extends JpaRepository<Scrutin, Long> {
 	@Query("update ScrutinVote sv set sv.voteDate=:date, sv.voteHash=:hash where sv.id.scrutinId=:scrutinId and sv.id.utilisateurId=:userId")
 	int setScrutinVoteDate(@Param("userId") Long userId, @Param("scrutinId") Long scrutinId, @Param("date") Date date, @Param("hash") String hash);
 
+	/**
+	 * @param userId
+	 * @return tous les scrutins associés à un utilisateur 'admin' (qq soit l'état ou
+	 *         dates des scrutins)
+	 */
+	@Query(nativeQuery = true, value = "select s.* from scrutin s, utilisateur_scrutin u  where u.scrutin_id=s.id and u.utilisateur_id=:userId")
+	List<Scrutin> listAdminUserScrutins(@Param("userId") Long userId);
+
 }
