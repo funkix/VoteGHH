@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/base}">
+
+<head>
+</head>
+<body>
+	<div layout:fragment="page_content">
+		<h2>Détail du scrutin</h2>
+		<div class="card" style="max-width: 700px">
+			<div class="card-header">
+				<span class="h4" th:text="${scrutin.nature}"></span>
+			</div>
+			<div class="card-body">
+				<div>
+					ouverture <span
+						th:text="${#dates.format(scrutin.dateOuverture, 'dd-MM-yyyy')}"></span>,
+					fermeture <span
+						th:text="${#dates.format(scrutin.dateFermeture, 'dd-MM-yyyy')}"></span>
+				</div>
+				<div>
+					<span th:text="${scrutin.nbQuestions}"></span> questions
+				</div>
+				<div>
+					Hash: <a
+						th:href="@{/admin/scrutins/scrutin-hash(scrid=${scrutin.id})}"
+						th:text="${scrutin.hash} ? ${scrutin.hash} : 'non enregistré'">
+					</a>
+				</div>
+				<div
+					th:if="${scrutin.phase == T(com.gesthelp.vote.domain.ScrutinEtat).RECETTE}">
+					Comptes votants de recette:
+					<ul th:if="${! #lists.isEmpty(votantsRecette)}">
+						<li th:each="scrut: ${votantsRecette}"><span class="mb-2">
+								<span th:text="${scrut.mail}"></span> <span class="ml-2">mdp:
+									<span th:text="${scrut.mdpClair}"></span>
+							</span>
+						</span></li>
+					</ul>
+				</div>
+				<div
+					th:if="${scrutin.phase == T(com.gesthelp.vote.domain.ScrutinEtat).PRODUCTION}">
+					Comptes scrutateurs:
+					<ul th:if="${! #lists.isEmpty(scrutateurs)}">
+						<li th:each="scrut: ${scrutateurs}"><span class="mb-2">
+								<span th:text="${scrut.mail}"></span> <span class="ml-2">mdp:
+									<span th:text="${scrut.mdpClair}"></span>
+							</span>
+						</span></li>
+					</ul>
+				</div>
+			</div>
+			<!-- <div class="card-footer">
+				<div class="d-flex">
+					<div></div>
+				</div>
+			</div> -->
+		</div>
+
+	</div>
+</body>
+</html>

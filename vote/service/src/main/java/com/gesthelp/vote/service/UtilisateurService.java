@@ -6,9 +6,9 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.gesthelp.vote.domain.Scrutin;
 import com.gesthelp.vote.domain.Utilisateur;
 import com.gesthelp.vote.repository.UtilisateurRepository;
 
@@ -39,25 +39,59 @@ public class UtilisateurService {
 		return saved;
 	}
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	public List<Utilisateur> findOrCreateScrutateurs(Long userId, Long scrutinId) {
+		List<Utilisateur> list = repo.findByScrutinIdAndRole(scrutinId, SecurityRoles.SCRUTATEUR);
+		if (list == null || list.isEmpty()) {
+			list = this.createScrutateurs(userId, scrutinId, 5);
+		}
+		return list;
+	}
+
 	public List<Utilisateur> findScrutateurs(Long userId, Long scrutinId) {
 		return repo.findByScrutinIdAndRole(scrutinId, SecurityRoles.SCRUTATEUR);
 	}
 
-	public List<Utilisateur> createScrutateurs(Long userId, Long scrutinId, int nbScrutateurs) {
+	private List<Utilisateur> createScrutateurs(Long userId, Long scrutinId, int nbScrutateurs) {
+		List<Utilisateur> res = generateUtilisateurs(userId, scrutinId, 5, "scrut", SecurityRoles.SCRUTATEUR);
+		log.info("createScrutateurs OUT " + userId + ", scrId=" + scrutinId + ", nb=" + nbScrutateurs + ", res=" + res);
+		return res;
+	}
+
+	public List<Utilisateur> findOrCreateVotantsRecette(Long userId, Long scrutinId) {
+		List<Utilisateur> list = repo.findByScrutinIdAndRole(scrutinId, SecurityRoles.VOTANT_RECETTE);
+		if (list == null || list.isEmpty()) {
+			list = this.createVotantsRecette(userId, scrutinId, 5);
+		}
+		return list;
+	}
+
+	private List<Utilisateur> createVotantsRecette(Long userId, Long scrutinId, int nbScrutateurs) {
+		List<Utilisateur> res = generateUtilisateurs(userId, scrutinId, 5, "rec", SecurityRoles.VOTANT_RECETTE);
+		log.info("createVotantsRecette OUT " + userId + ", scrId=" + scrutinId + ", nb=" + nbScrutateurs + ", res=" + res);
+		return res;
+	}
+
+	private List<Utilisateur> generateUtilisateurs(Long userId, Long scrutinId, int nbScrutateurs, String mailprefix, String role) {
 		List<Utilisateur> res = new ArrayList<Utilisateur>();
-		Scrutin scrutin = scrutinService.findScrutinVotant(userId, scrutinId);
 		for (int i = 0; i < nbScrutateurs; i++) {
-			Utilisateur u = new Utilisateur();
-			String userMail = "scrut" + scrutinId + "" + (i + 7) + "@votesecure.fr";
-			userMail = userMail.replaceAll("\u0000", "");
-			u.setMail(userMail);
-			u.setMdpClair(PasswordGenerator.generateEasyPassword(4).replaceAll("\u0000", ""));
-			u.setRole(SecurityRoles.SCRUTATEUR);
-			res.add(u);
+			// creation utilisateur
+			Utilisateur utilisateur = new Utilisateur();
+			String mail = mailprefix + scrutinId + "" + (i + 7) + "@votesecure.fr";
+			mail = mail.replaceAll("\u0000", "");
+			utilisateur.setMail(mail);
+			utilisateur.setMdpClair(PasswordGenerator.generateEasyPassword(4).replaceAll("\u0000", ""));
+			utilisateur.setMdp(passwordEncoder.encode(utilisateur.getMdpClair()));
+			utilisateur.setRole(role);
+			// save utilisateur
+			utilisateur = this.save(utilisateur);
+			res.add(utilisateur);
+			// save utilisateur_scrutin
+			this.scrutinService.saveUserScrutin(utilisateur, scrutinId);
 		}
 		log.info("createScrutateurs OUT " + userId + ", scrId=" + scrutinId + ", nb=" + nbScrutateurs + ", res=" + res);
 		return res;
-
 	}
-
 }

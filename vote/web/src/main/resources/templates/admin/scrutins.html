@@ -42,10 +42,9 @@
 			<div class="card-footer">
 				<div class="d-flex">
 					<div>
-						<form method="get" th:action="@{/admin/scrutins/resultats}">
+						<form method="get" th:action="@{/admin/scrutins/scrutin}">
 							<input type="hidden" name="scrid" th:value="${scrutin.id}">
-							<button type="submit" class="btn btn-primary">Voir les
-								résultats</button>
+							<button type="submit" class="btn btn-primary">Détails</button>
 						</form>
 					</div>
 				</div>

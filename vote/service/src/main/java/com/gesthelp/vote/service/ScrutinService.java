@@ -52,6 +52,10 @@ public class ScrutinService {
 		return repository.findById(scrutinId).orElse(null);
 	}
 
+	public ScrutinVote saveUserScrutin(Utilisateur u, Long scrutinId) {
+		return saveUserScrutin(u, this.findScrutinById(scrutinId));
+	}
+
 	public ScrutinVote saveUserScrutin(Utilisateur u, Scrutin s) {
 		ScrutinVote sv = new ScrutinVote();
 		sv.setUtilisateur(u);
