@@ -142,6 +142,9 @@ public class VotantController extends BaseController {
 		return "scrutin-vote-resume";
 	}
 
+//	@Autowired
+//	private SendEmailAVoteJob sendEmailAVoteJob; 
+
 	@GetMapping("voteConfirm")
 	public String voteConfirmStep(Model model) {
 		ScrutinSessionDto scrDto = getSessionScrutin(null, null);
@@ -150,6 +153,7 @@ public class VotantController extends BaseController {
 		log.info("voteConfirmStep ScrutinVote " + sv);
 		model.addAttribute("voteDate", sv.getVoteDate());
 		model.addAttribute("voteHash", sv.getVoteHash());
+		// sendEmailAVoteJob.launch(getUserId(), scrDto.getId());
 		// super.setSessionObject(SCRUTIN_SESSION_KEY, null);
 		return "scrutin-vote-success";
 	}

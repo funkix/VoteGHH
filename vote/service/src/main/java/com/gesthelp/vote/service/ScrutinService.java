@@ -2,6 +2,7 @@ package com.gesthelp.vote.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -23,6 +24,7 @@ import com.gesthelp.vote.repository.QuestionRespItemRepository;
 import com.gesthelp.vote.repository.QuestionRespRepository;
 import com.gesthelp.vote.repository.ScrutinRepository;
 import com.gesthelp.vote.repository.ScrutinVoteRepository;
+import com.gesthelp.vote.repository.UtilisateurRepository;
 import com.gesthelp.vote.service.dto.QuestionDto;
 import com.gesthelp.vote.service.dto.QuestionItemDto;
 import com.gesthelp.vote.service.exception.DejaVoteException;
@@ -41,6 +43,10 @@ public class ScrutinService {
 	private QuestionRespRepository questionRespRepository;
 	@Autowired
 	private QuestionRespItemRepository questionRespItemRepository;
+	@Autowired
+	private UtilisateurRepository utilisateurRepository;
+	@Autowired
+	private UtilisateurEmailService emailService;
 
 	public Scrutin findScrutinById(Long scrutinId) {
 		return repository.findById(scrutinId).orElse(null);
@@ -87,6 +93,8 @@ public class ScrutinService {
 		if (isVoteComplete(userId, scrutinId, questions)) {
 			return null;
 		}
+		Utilisateur utilisateur = utilisateurRepository.findById(userId).orElse(null);
+		// TODO vérifier role votant
 		ScrutinVote vote = scrutinVoteRepository.findById(new ScrutinVoteKey(scrutinId, userId)).orElse(null);
 		if (vote == null) {
 			throw new VoteRuntimeException("vote_not_found", "vote not found scrutinId " + scrutinId);
@@ -120,6 +128,11 @@ public class ScrutinService {
 		log.info("saving vote responseHashBuffer :\n" + responseHashBuffer);
 		this.repository.setScrutinVoteDate(userId, scrutinId, new Date(), this.hashBuffer(responseHashBuffer.toString()));
 		vote = this.scrutinVoteRepository.findById(new ScrutinVoteKey(scrutinId, userId)).orElse(null);
+		try {
+			emailService.sendMessageAVote(utilisateur, vote.getVoteHash());
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "mail non envoyé pour " + utilisateur.getMail());
+		}
 		return vote;
 	}
 
