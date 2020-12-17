@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.gesthelp.vote.service.SecurityRoles;
 import com.gesthelp.vote.web.service.UtilisateurLoginService;
 
 @Configuration
@@ -30,12 +31,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
         .csrf().disable()
         .authorizeRequests()
-	        .antMatchers("/admin/**").hasRole("ADMIN")
+	        .antMatchers("/admin/**").hasRole(SecurityRoles.ADMIN)
 	        .antMatchers("/js/**").permitAll()
 	        .antMatchers("/login*", "/logout*").permitAll()
 	        .antMatchers("/", "/index*").permitAll()
-	        .antMatchers("/scrut/*").hasRole("SCRUTATEUR")
-	        .anyRequest().hasAnyRole("ADMIN","VOTANT")
+	        .antMatchers("/scrut/*").hasRole(SecurityRoles.SCRUTATEUR)
+	        .anyRequest().hasAnyRole(SecurityRoles.ADMIN, SecurityRoles.VOTANT, SecurityRoles.VOTANT_RECETTE)
 	        .and()
         .formLogin()
 	        .loginPage("/login")

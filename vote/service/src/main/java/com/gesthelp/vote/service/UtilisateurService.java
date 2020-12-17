@@ -43,7 +43,7 @@ public class UtilisateurService {
 	private PasswordEncoder passwordEncoder;
 
 	public List<Utilisateur> findOrCreateScrutateurs(Long userId, Long scrutinId) {
-		List<Utilisateur> list = repo.findByScrutinIdAndRole(scrutinId, SecurityRoles.SCRUTATEUR);
+		List<Utilisateur> list = repo.findByScrutinIdAndRole(scrutinId, SecurityRoles.ROLE_SCRUTATEUR);
 		if (list == null || list.isEmpty()) {
 			list = this.createScrutateurs(userId, scrutinId, 5);
 		}
@@ -51,17 +51,17 @@ public class UtilisateurService {
 	}
 
 	public List<Utilisateur> findScrutateurs(Long userId, Long scrutinId) {
-		return repo.findByScrutinIdAndRole(scrutinId, SecurityRoles.SCRUTATEUR);
+		return repo.findByScrutinIdAndRole(scrutinId, SecurityRoles.ROLE_SCRUTATEUR);
 	}
 
 	private List<Utilisateur> createScrutateurs(Long userId, Long scrutinId, int nbScrutateurs) {
-		List<Utilisateur> res = generateUtilisateurs(userId, scrutinId, 5, "scrut", SecurityRoles.SCRUTATEUR);
+		List<Utilisateur> res = generateUtilisateurs(userId, scrutinId, 5, "scrut", SecurityRoles.ROLE_SCRUTATEUR);
 		log.info("createScrutateurs OUT " + userId + ", scrId=" + scrutinId + ", nb=" + nbScrutateurs + ", res=" + res);
 		return res;
 	}
 
 	public List<Utilisateur> findOrCreateVotantsRecette(Long userId, Long scrutinId) {
-		List<Utilisateur> list = repo.findByScrutinIdAndRole(scrutinId, SecurityRoles.VOTANT_RECETTE);
+		List<Utilisateur> list = repo.findByScrutinIdAndRole(scrutinId, SecurityRoles.ROLE_VOTANT_RECETTE);
 		if (list == null || list.isEmpty()) {
 			list = this.createVotantsRecette(userId, scrutinId, 5);
 		}
@@ -69,7 +69,7 @@ public class UtilisateurService {
 	}
 
 	private List<Utilisateur> createVotantsRecette(Long userId, Long scrutinId, int nbScrutateurs) {
-		List<Utilisateur> res = generateUtilisateurs(userId, scrutinId, 5, "rec", SecurityRoles.VOTANT_RECETTE);
+		List<Utilisateur> res = generateUtilisateurs(userId, scrutinId, 5, "rec", SecurityRoles.ROLE_VOTANT_RECETTE);
 		log.info("createVotantsRecette OUT " + userId + ", scrId=" + scrutinId + ", nb=" + nbScrutateurs + ", res=" + res);
 		return res;
 	}

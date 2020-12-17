@@ -67,18 +67,29 @@ public class ScrutinService {
 	}
 
 	public List<Scrutin> listOpenScrutins(Long userId) {
-		Date today = new Date();
-		List<Scrutin> res = this.repository.listUserScrutins(userId, today, ScrutinEtat.PRODUCTION.value());
-		for (Scrutin scr : res) {
-			ScrutinVote test = scrutinVoteRepository.findById(new ScrutinVoteKey(scr.getId(), userId)).orElse(null);
-			log.info("ici " + test);
+		List<Scrutin> res = null;
+		Utilisateur user = this.utilisateurRepository.findById(userId).orElse(null);
+		if (user.getRole().equals(SecurityRoles.ROLE_VOTANT_RECETTE)) {
+			res = this.repository.listUserScrutinsNoDate(userId, ScrutinEtat.RECETTE.value());
+		} else {
+			// VOTANT
+			Date today = new Date();
+			res = this.repository.listUserScrutins(userId, today, ScrutinEtat.PRODUCTION.value());
 		}
+
 		log.info("listOpenScrutins for " + userId + " returns " + res.size() + " results");
 		return res;
 	}
 
 	public Scrutin findScrutinVotant(Long userId, Long scrutinId) {
-		Scrutin scrutin = repository.findScrutinVotant(userId, scrutinId, new Date(), ScrutinEtat.PRODUCTION.value());
+		Utilisateur user = this.utilisateurRepository.findById(userId).orElse(null);
+		Scrutin scrutin = null;
+		if (user.getRole().equals(SecurityRoles.ROLE_VOTANT_RECETTE)) {
+			scrutin = repository.findScrutinVotant(userId, scrutinId, new Date(), ScrutinEtat.RECETTE.value());
+		} else {
+			scrutin = repository.findScrutinVotantNoDate(userId, scrutinId, ScrutinEtat.PRODUCTION.value());
+		}
+
 		log.info("listOpenScrutins for " + userId + " and scrutinId " + scrutinId + " returns " + scrutin);
 		return scrutin;
 	}
@@ -132,10 +143,13 @@ public class ScrutinService {
 		log.info("saving vote responseHashBuffer :\n" + responseHashBuffer);
 		this.repository.setScrutinVoteDate(userId, scrutinId, new Date(), this.hashBuffer(responseHashBuffer.toString()));
 		vote = this.scrutinVoteRepository.findById(new ScrutinVoteKey(scrutinId, userId)).orElse(null);
-		try {
-			emailService.sendMessageAVote(utilisateur, vote.getVoteHash());
-		} catch (Exception e) {
-			log.log(Level.SEVERE, "mail non envoyé pour " + utilisateur.getMail());
+		if (SecurityRoles.ROLE_VOTANT.equals(utilisateur.getRole())) {
+			// on n'envoie pas aux votants de recette ...
+			try {
+				this.emailService.sendMessageAVote(utilisateur, vote.getVoteHash());
+			} catch (Exception e) {
+				log.log(Level.SEVERE, "mail non envoyé pour " + utilisateur.getMail());
+			}
 		}
 		return vote;
 	}
