@@ -9,14 +9,26 @@
 	<div layout:fragment="page_content">
 
 		<h2>Liste des scrutins</h2>
-		
+
 		<span th:if="${#lists.isEmpty(items)}">Aucun scrutin</span>
-		
+
+
 		<div th:each="scrutin: ${items}" class="card" style="max-width: 700px">
+
+
+
 			<div class="card-header">
+			<div th:replace="fragments/commons.html :: etatScrutinBadge"></div>
 				<span class="h4" th:text="${scrutin.nature}"></span>
+				
 			</div>
 			<div class="card-body">
+				<div>
+					Ouverture du <span
+						th:text="${#dates.format(scrutin.dateOuverture, 'dd/MM/yyyy')}"></span>
+					au <span
+						th:text="${#dates.format(scrutin.dateFermeture, 'dd/MM/yyyy')}"></span>
+				</div>
 				<div>
 					<span th:text="${scrutin.nbQuestions}"></span> questions
 				</div>

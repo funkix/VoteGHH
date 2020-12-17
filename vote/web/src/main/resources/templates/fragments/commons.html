@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+</head>
+<body>
+	<span th:fragment="etatScrutinBadge"> <span
+		class="badge bg-primary"
+		th:if="${scrutin.phase == T(com.gesthelp.vote.domain.ScrutinEtat).CREATION}">
+			Création </span> <span class="badge bg-primary"
+		th:if="${scrutin.phase == T(com.gesthelp.vote.domain.ScrutinEtat).RECETTE}">
+			Recette </span> <span class="badge bg-primary"
+		th:if="${scrutin.phase == T(com.gesthelp.vote.domain.ScrutinEtat).PRODUCTION}">
+			En cours </span> <span class="badge bg-primary"
+		th:if="${scrutin.phase == T(com.gesthelp.vote.domain.ScrutinEtat).DEPOUILLE}">
+			Terminé </span>
+	</span>
+
+</body>
+</html>
