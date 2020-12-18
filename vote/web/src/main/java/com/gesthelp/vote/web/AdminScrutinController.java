@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -39,9 +40,6 @@ public class AdminScrutinController extends BaseController {
 		model.addAttribute("items", dtolist);
 		return "/admin/scrutins";
 	}
-
-	@Autowired
-	private PasswordEncoder passwordEncoder;
 
 	@GetMapping("/resultats")
 	public String resultats(@RequestParam(name = "scrid", required = true) Long scrutinId, Model model) {
@@ -98,11 +96,21 @@ public class AdminScrutinController extends BaseController {
 	public String saveScrutinHash(@RequestParam(name = "scrid", required = true) Long scrutinId, Model model, RedirectAttributes ratt) {
 		log.info("saveScrutinHash IN " + scrutinId);
 		Scrutin scr = this.scrutinService.findScrutinById(scrutinId);
-		String hash = this.scrutinService.saveScrutinHash(scr);
+		scr = this.scrutinService.buildAndSaveHash(scr);
+		String hash = scr.getHash();
 		log.info("saveScrutinHash done " + hash);
 		ratt.addAttribute("scrid", scrutinId);
 		ratt.addAttribute("sd", "o");
 		return "redirect:/admin/scrutins/scrutin-hash";
+	}
+
+	@PostMapping("/production")
+	public String gotoProduction(@RequestParam(name = "scrid", required = true) Long scrutinId, Model model, RedirectAttributes ratt) {
+		log.info("gotoProduction IN " + scrutinId);
+		Scrutin s = this.scrutinService.toProduction(scrutinId);
+		log.info("gotoProduction done " + s);
+		ratt.addAttribute("scrid", scrutinId);
+		return "redirect:/admin/scrutins/scrutin";
 	}
 
 }

@@ -207,8 +207,8 @@ public class ScrutinService {
 		return DigestUtils.sha256Hex(buffer);
 	}
 
-	public String saveScrutinHash(Scrutin scr) {
-		if (!scr.getPhase().equals(ScrutinEtat.RECETTE)) {
+	public Scrutin buildAndSaveHash(Scrutin scr) {
+		if (!ScrutinEtat.RECETTE.equals(scr.getPhase())) {
 			throw new RuntimeException("opération interdite pour le scrutin " + scr.getId());
 		}
 		String scrutinHashBuffer = this.scrutinHashBuffer(scr);
@@ -217,8 +217,21 @@ public class ScrutinService {
 		log.info("saveScrutinHash sha256hex=" + sha256hex);
 		scr.setHashBuffer(scrutinHashBuffer);
 		scr.setHash(sha256hex);
-		this.repository.save(scr);
-		return scrutinHashBuffer;
-
+		scr = this.repository.save(scr);
+		return scr;
 	}
+
+	public Scrutin toProduction(Long scrutinId) {
+		Scrutin s = this.findScrutinById(scrutinId);
+		if (!ScrutinEtat.RECETTE.equals(s.getPhase())) {
+			throw new RuntimeException("Passage en production impossible, le scutin n'est pas en RECETTE, " + scrutinId);
+		}
+		// on fixe le hash
+		this.buildAndSaveHash(s);
+		// on enregistre l'état
+		s.setPhase(ScrutinEtat.PRODUCTION);
+		s = this.repository.save(s);
+		return s;
+	}
+
 }

@@ -11,6 +11,8 @@
 		<div class="card" style="max-width: 700px">
 			<div class="card-header">
 				<span class="h4" th:text="${scrutin.nature}"></span>
+				<div th:replace="fragments/commons.html :: etatScrutinBadge">
+				</div>
 			</div>
 			<div class="card-body">
 				<div>
@@ -28,6 +30,7 @@
 						th:text="${scrutin.hash} ? ${scrutin.hash} : 'non enregistré'">
 					</a>
 				</div>
+				<!-- RECETTE -->
 				<div
 					th:if="${scrutin.phase == T(com.gesthelp.vote.domain.ScrutinEtat).RECETTE}">
 					Comptes votants de recette:
@@ -39,6 +42,7 @@
 						</span></li>
 					</ul>
 				</div>
+				<!-- PRODUCTION -->
 				<div
 					th:if="${scrutin.phase == T(com.gesthelp.vote.domain.ScrutinEtat).PRODUCTION}">
 					Comptes scrutateurs:
@@ -51,13 +55,21 @@
 					</ul>
 				</div>
 			</div>
-			<!-- <div class="card-footer">
+			<div class="card-footer">
 				<div class="d-flex">
-					<div></div>
+					<div th:if="${scrutin.phase == T(com.gesthelp.vote.domain.ScrutinEtat).RECETTE}">
+						<form method="post" th:action="@{/admin/scrutins/production}">
+							<input type="hidden" name="scrid" th:value="${scrutin.id}">
+							<button type="submit" class="btn btn-primary">Passer en production</button>
+						</form>
+					</div>
+					<div th:if="${scrutin.phase == T(com.gesthelp.vote.domain.ScrutinEtat).PRODUCTION}">
+						<button type="submit" class="btn btn-primary" onclick="alert('a faire')">Dépouillement</button>
+					</div>
 				</div>
-			</div> -->
-		</div>
+			</div>
 
+		</div>
 	</div>
 </body>
 </html>
