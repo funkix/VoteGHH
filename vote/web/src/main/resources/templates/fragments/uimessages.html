@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+</head>
+<body>
+	<ul th:if="${! #lists.isEmpty(session.uiMessageList)}"
+		class="list-unstyled">
+		<li th:each="msg: ${session.uiMessageList}">
+			<div class="alert  alert-dismissible fade show"
+				th:classappend="${msg.messageTypeRef.value=='ERR' ? 'alert-danger' : 'alert-success'}"
+				role="alert">
+				<span th:text="${msg.message}"></span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert"
+					aria-label="Close"></button>
+			</div>
+		</li>
+	</ul>
+	<span th:if="${#session} != null"
+		th:text="${#session.removeAttribute('uiMessageList')}"></span>
+
+	<ul th:if="${! #lists.isEmpty(uiMessageList)}" class="list-unstyled">
+		<li th:each="msg: ${uiMessageList}">
+			<div class="alert  alert-dismissible fade show"
+				th:classappend="${msg.messageTypeRef.value=='ERR' ? 'alert-danger' : 'alert-success'}"
+				role="alert">
+				<span th:text="${msg.message}"></span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert"
+					aria-label="Close"></button>
+			</div>
+		</li>
+
+	</ul>
+</body>
+</html>

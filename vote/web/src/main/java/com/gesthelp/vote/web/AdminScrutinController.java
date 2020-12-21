@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -109,6 +108,7 @@ public class AdminScrutinController extends BaseController {
 		log.info("gotoProduction IN " + scrutinId);
 		Scrutin s = this.scrutinService.toProduction(scrutinId);
 		log.info("gotoProduction done " + s);
+		addFlashMessage("Scrutin opérationnel", UIMessageType.INFO, true);
 		ratt.addAttribute("scrid", scrutinId);
 		return "redirect:/admin/scrutins/scrutin";
 	}
