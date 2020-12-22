@@ -21,7 +21,7 @@
 			<div class="col-sm-6">
 				<div style="max-width: 300px">
 					<div sec:authorize="!isAuthenticated()">
-						<form class="form-signin" name="login" action="perform_login"
+						<form class="form-signin" name="login" th:action="@{/perform_login}"
 							method="POST">
 							<p th:if="${param.error}" class="text-danger">
 								Le mot de passe est incorrect.<br /> Veuillez vérifier les

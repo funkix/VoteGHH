@@ -37,7 +37,7 @@ public class AdminScrutinController extends BaseController {
 		List<Scrutin> list = this.scrutinService.listAdminScrutins(getUserId());
 		List<ScrutinInfoDto> dtolist = list.stream().map(s -> DtoUtils.dto(s)).collect(Collectors.toList());
 		model.addAttribute("items", dtolist);
-		return "/admin/scrutins";
+		return "admin/scrutins";
 	}
 
 	@GetMapping("/resultats")
@@ -51,7 +51,7 @@ public class AdminScrutinController extends BaseController {
 		log.info("scrutateurs " + scrutateurs);
 		model.addAttribute("scrutateurs", scrutateursDto);
 
-		return "/admin/resultats";
+		return "admin/resultats";
 	}
 
 	@GetMapping("/scrutin")
@@ -70,7 +70,7 @@ public class AdminScrutinController extends BaseController {
 			model.addAttribute("votantsRecette", scrutateursDto);
 		}
 		model.addAttribute("scrutin", dto);
-		return "/admin/scrutin";
+		return "admin/scrutin";
 	}
 
 	@GetMapping("/scrutin-hash")
@@ -88,7 +88,7 @@ public class AdminScrutinController extends BaseController {
 		// mismatch warning
 		model.addAttribute("hashMismatch", !scrutinHash.equals(s.getHash()));
 		model.addAttribute("hashBufferMismatch", !scrutinHashBuffer.equals(s.getHashBuffer()));
-		return "/admin/scrutin-hash";
+		return "admin/scrutin-hash";
 	}
 
 	@GetMapping("/scrutin-hash-save")
