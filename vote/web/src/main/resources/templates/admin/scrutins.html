@@ -47,6 +47,13 @@
 							<button type="submit" class="btn btn-primary">Détails</button>
 						</form>
 					</div>
+					<div>
+						<form method="get" th:action="@{/admin/scrutins/participation}">
+							<input type="hidden" name="scrid" th:value="${scrutin.id}">
+							<button type="submit" class="btn btn-secondary ml-2">Voir la
+								participation</button>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>

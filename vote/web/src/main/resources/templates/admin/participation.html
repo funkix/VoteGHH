@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/base}">
+
+<head>
+</head>
+<body>
+	<div layout:fragment="page_content">
+		<h2>Résultat de scrutin</h2>
+
+		<div class="card" style="max-width: 700px">
+			<div class="card-header">
+				<span class="h4" th:text="${scrutin.nature}"></span>
+			</div>
+			<div class="card-body">
+				<table>
+					<tr>
+						<th>Date/Heure début</th>
+						<th>Date/Heure fin</th>
+						<th>Nombre de d'inscription</th>
+						<th>Nombre de votants</th>
+						<th>Taux de participation</th>
+						<th>Quorum</th>
+						<th>Résultats</th>
+					</tr>
+					<tr>
+						<td><span th:text="${#dates.format(scrutin.dateOuverture, 'dd-MM-yyyy HH:mm')}"></span></td>
+						<td><span th:text="${#dates.format(scrutin.dateFermeture, 'dd-MM-yyyy HH:mm')}"></span></td>
+						<td><span th:text="${nbI}"></span></td>
+						<td><span th:text="${nbP}"></span></td>
+						<td><span th:text="${pourcentage}"></span> %</td>
+						<td><span th:text="${scrutin.quorum}"></span></td>
+						<td><form method="get" th:action="@{/admin/scrutins/participation}">
+							<input type="hidden" name="scrid" th:value="${scrutin.id}">
+							<button type="submit" class="btn btn-primary ml-2">Afficher</button>
+						</form></td>
+					<tr>
+				</table>
+				<!-- <div>
+					<span th:text="${scrutin.nbQuestions}"></span> questions
+				</div> -->
+			</div>
+			<div class="card-footer">
+				<div class="d-flex">
+					<div></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

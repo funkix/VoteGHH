@@ -16,4 +16,5 @@ public class ScrutinInfoDto {
 	Date dateCreation;
 	Integer nbQuestions;
 	String hashBuffer, hash;
+	Long quorum;
 }

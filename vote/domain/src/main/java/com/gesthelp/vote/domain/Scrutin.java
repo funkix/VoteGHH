@@ -38,6 +38,8 @@ public class Scrutin {
 	@Column(name = "hash_buffer")
 	String hashBuffer;
 
+	Long quorum;
+	
 //	@ManyToMany(mappedBy = "scrutins", fetch = FetchType.LAZY)
 //	private Set<Utilisateur> votants;
 

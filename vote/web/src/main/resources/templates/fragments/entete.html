@@ -1,14 +1,14 @@
 <div class="py-4 px-2 mb-2 bg-secondary text-white d-flex">
 	<div class="flex-grow-1">
 		<h1 class="display-5">
-			<a href="/" class="text-white">Gest'Help</a>
+			<a href="/" class="text-white">Plateforme de Vote GHH</a>
 		</h1>
 	</div>
 	<div class="text-white">
 		<div sec:authorize="isAuthenticated()">
 			<!-- This content is only shown to authenticated users: -->
-			<span sec:authentication="name"></span> <br /> <a
-				th:href="@{/perform_logout}" class="text-white">Déconnexion</a>
+			<i class="far fa-user-circle"></i> <span sec:authentication="name"></span> <br /> <a
+				th:href="@{/perform_logout}" class="text-white"><i class="fa fa-power-off"></i> Déconnexion</a>
 		</div>
 	</div>
 </div>

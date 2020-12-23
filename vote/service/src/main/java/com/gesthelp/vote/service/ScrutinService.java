@@ -1,5 +1,7 @@
 package com.gesthelp.vote.service;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -232,6 +234,24 @@ public class ScrutinService {
 		s.setPhase(ScrutinEtat.PRODUCTION);
 		s = this.repository.save(s);
 		return s;
+	}
+	public BigDecimal nbInscrits(Long scrutinId) {
+		BigDecimal nbI = new BigDecimal(scrutinVoteRepository.nbInscrits(scrutinId));
+		return nbI;
+	}
+
+	public BigDecimal nbParticipants(Long scrutinId) {
+		BigDecimal nbI = new BigDecimal(scrutinVoteRepository.nbParticipants(scrutinId));
+		return nbI;
+	}
+
+	public BigDecimal poucentageParticipationScrutin(BigDecimal nbParticipants, BigDecimal nbInscrits) {
+		if (BigDecimal.ZERO.equals(nbInscrits)) {
+			return new BigDecimal(0);
+		}
+		BigDecimal pourcentage = nbParticipants.divide(nbInscrits, MathContext.DECIMAL128);
+		pourcentage = pourcentage.multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP);
+		return pourcentage;
 	}
 
 }

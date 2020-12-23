@@ -1,5 +1,6 @@
 package com.gesthelp.vote.web;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +53,28 @@ public class AdminScrutinController extends BaseController {
 		model.addAttribute("scrutateurs", scrutateursDto);
 
 		return "admin/resultats";
+	}
+	
+	@Autowired
+	private ScrutinService serviceScrutinVote;
+
+	@GetMapping("/participation")
+	public String participation(@RequestParam(name = "scrid", required = true) Long scrutinId, Model model) {
+		log.info("resultats IN " + scrutinId);
+		Scrutin s = scrutinService.findScrutinScrut(getUserId(), scrutinId);
+		ScrutinInfoDto dto = DtoUtils.dto(s);
+		model.addAttribute("scrutin", dto);
+		//Connaître le nombre de d'inscrits au scrutin
+		BigDecimal nbI = serviceScrutinVote.nbInscrits(scrutinId);
+		model.addAttribute("nbI", nbI);
+		//Connaître le nombre de personnes ayant déjà voté au scrutin
+		BigDecimal nbP = serviceScrutinVote.nbParticipants(scrutinId);
+		model.addAttribute("nbP", nbP);
+		//Calculer le pourcentage de participation
+		BigDecimal pourcentage = serviceScrutinVote.poucentageParticipationScrutin(nbP,nbI);
+		model.addAttribute("pourcentage", pourcentage);
+		
+		return "/admin/participation";
 	}
 
 	@GetMapping("/scrutin")

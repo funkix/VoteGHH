@@ -3,7 +3,8 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
-<title>Gest'Help Votation</title>
+<link rel="stylesheet" href="/style/style.css">
+<title>Plateforme de Vote GHH</title>
 <th:block th:include="fragments/genericHead"></th:block>
 </head>
 <body>
@@ -11,6 +12,7 @@
 		<div th:insert="fragments/entete.html"></div>
 		<div th:insert="fragments/uimessages.html"></div>
 		<div layout:fragment="page_content"></div>
+		<div th:insert="fragments/pied.html"></div>
 	</div>
 	<div th:insert="fragments/genericJs.html"></div>
 </body>
