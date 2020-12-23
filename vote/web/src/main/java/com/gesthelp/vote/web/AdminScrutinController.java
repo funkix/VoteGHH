@@ -54,7 +54,7 @@ public class AdminScrutinController extends BaseController {
 
 		return "admin/resultats";
 	}
-	
+
 	@Autowired
 	private ScrutinService serviceScrutinVote;
 
@@ -64,17 +64,16 @@ public class AdminScrutinController extends BaseController {
 		Scrutin s = scrutinService.findScrutinScrut(getUserId(), scrutinId);
 		ScrutinInfoDto dto = DtoUtils.dto(s);
 		model.addAttribute("scrutin", dto);
-		//Connaître le nombre de d'inscrits au scrutin
+		// Connaître le nombre de d'inscrits au scrutin
 		BigDecimal nbI = serviceScrutinVote.nbInscrits(scrutinId);
 		model.addAttribute("nbI", nbI);
-		//Connaître le nombre de personnes ayant déjà voté au scrutin
+		// Connaître le nombre de personnes ayant déjà voté au scrutin
 		BigDecimal nbP = serviceScrutinVote.nbParticipants(scrutinId);
 		model.addAttribute("nbP", nbP);
-		//Calculer le pourcentage de participation
-		BigDecimal pourcentage = serviceScrutinVote.poucentageParticipationScrutin(nbP,nbI);
+		// Calculer le pourcentage de participation
+		BigDecimal pourcentage = serviceScrutinVote.poucentageParticipationScrutin(nbP, nbI);
 		model.addAttribute("pourcentage", pourcentage);
-		
-		return "/admin/participation";
+		return "admin/participation";
 	}
 
 	@GetMapping("/scrutin")
