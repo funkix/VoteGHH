@@ -32,7 +32,7 @@
 		<h3 class="mt-3">Valeurs enregistrées</h3>
 		<div class="card">
 			<div class="card-body">
-				<h5>Hash</h5>
+				<h4>Hash (SHA256)</h4>
 				<span th:text="${scrutin.hash} ? ${scrutin.hash} : 'non enregistré'"></span>
 
 				<h4>Clé du hash</h4>
@@ -52,7 +52,7 @@
 		<h3 class="mt-5">Calculé (live)</h3>
 		<div class="card">
 			<div class="card-body">
-				<h4>Hash</h4>
+				<h4>Hash (SHA256)</h4>
 				<span th:text="${scrutinHash}"
 					th:classappend="${hashMismatch ? 'text-danger' : 'text-success'}"></span>
 				<h4>Clé du hash</h4>

@@ -25,15 +25,15 @@
 			<div class="card-body">
 				<div>
 					Ouverture du <span
-						th:text="${#dates.format(scrutin.dateOuverture, 'dd/MM/yyyy')}"></span>
+						th:text="${#dates.format(scrutin.dateOuverture, 'dd/MM/yyyy &agrave; HH:mm')}"></span>
 					au <span
-						th:text="${#dates.format(scrutin.dateFermeture, 'dd/MM/yyyy')}"></span>
+						th:text="${#dates.format(scrutin.dateFermeture, 'dd/MM/yyyy &agrave; HH:mm')}"></span>
 				</div>
 				<div>
 					<span th:text="${scrutin.nbQuestions}"></span> questions
 				</div>
 				<div>
-					Hash: <a
+					Hash (SHA256) : <a
 						th:href="@{/admin/scrutins/scrutin-hash(scrid=${scrutin.id})}"
 						th:text="${scrutin.hash} ? ${scrutin.hash} : 'non enregistré'">
 					</a>
