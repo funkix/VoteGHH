@@ -18,9 +18,9 @@
 			<div class="card-body">
 				<div>
 					Ouvert du <span
-						th:text="${#dates.format(scrutin.dateOuverture, 'dd/MM/yyyy')}"></span>
+						th:text="${#temporals.format(scrutin.dateOuverture, 'dd/MM/yyyy &agrave; HH:mm')}"></span>
 					au <span
-						th:text="${#dates.format(scrutin.dateFermeture, 'dd/MM/yyyy')}"></span>
+						th:text="${#temporals.format(scrutin.dateFermeture, 'dd/MM/yyyy &agrave; HH:mm')}"></span>
 				</div>
 				<div>
 					<span th:text="${scrutin.nbQuestions}"></span> questions

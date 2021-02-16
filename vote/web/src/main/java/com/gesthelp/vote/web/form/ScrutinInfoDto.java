@@ -1,5 +1,6 @@
 package com.gesthelp.vote.web.form;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.gesthelp.vote.domain.ScrutinEtat;
@@ -10,8 +11,8 @@ import lombok.Data;
 public class ScrutinInfoDto {
 	Long id;
 	String nature;
-	Date dateOuverture;
-	Date dateFermeture;
+	LocalDateTime dateOuverture;
+	LocalDateTime dateFermeture;
 	ScrutinEtat phase;
 	Date dateCreation;
 	Integer nbQuestions;

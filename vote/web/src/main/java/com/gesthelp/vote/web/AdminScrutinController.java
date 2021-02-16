@@ -1,13 +1,17 @@
 package com.gesthelp.vote.web;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +22,7 @@ import com.gesthelp.vote.domain.ScrutinEtat;
 import com.gesthelp.vote.domain.Utilisateur;
 import com.gesthelp.vote.service.ScrutinService;
 import com.gesthelp.vote.service.UtilisateurService;
+import com.gesthelp.vote.web.form.ScrutinDateForm;
 import com.gesthelp.vote.web.form.ScrutinInfoDto;
 import com.gesthelp.vote.web.form.UtilisateurDto;
 
@@ -46,7 +51,8 @@ public class AdminScrutinController extends BaseController {
 		log.info("resultats IN " + scrutinId);
 		Scrutin s = scrutinService.findScrutinScrut(getUserId(), scrutinId);
 		List<Utilisateur> scrutateurs = this.utilisateurService.findOrCreateScrutateurs(getUserId(), scrutinId);
-		List<UtilisateurDto> scrutateursDto = scrutateurs.stream().map(u -> DtoUtils.dto(u)).collect(Collectors.toList());
+		List<UtilisateurDto> scrutateursDto = scrutateurs.stream().map(u -> DtoUtils.dto(u))
+				.collect(Collectors.toList());
 		ScrutinInfoDto dto = DtoUtils.dto(s);
 		model.addAttribute("scrutin", dto);
 		log.info("scrutateurs " + scrutateurs);
@@ -84,14 +90,18 @@ public class AdminScrutinController extends BaseController {
 		if (ScrutinEtat.PRODUCTION.equals(s.getPhase())) {
 			// scrutateurs
 			List<Utilisateur> scrutateurs = this.utilisateurService.findOrCreateScrutateurs(getUserId(), scrutinId);
-			List<UtilisateurDto> scrutateursDto = scrutateurs.stream().map(u -> DtoUtils.dto(u)).collect(Collectors.toList());
+			List<UtilisateurDto> scrutateursDto = scrutateurs.stream().map(u -> DtoUtils.dto(u))
+					.collect(Collectors.toList());
 			model.addAttribute("scrutateurs", scrutateursDto);
 		} else if (ScrutinEtat.RECETTE.equals(s.getPhase())) {
 			List<Utilisateur> scrutateurs = this.utilisateurService.findOrCreateVotantsRecette(getUserId(), scrutinId);
-			List<UtilisateurDto> scrutateursDto = scrutateurs.stream().map(u -> DtoUtils.dto(u)).collect(Collectors.toList());
+			List<UtilisateurDto> scrutateursDto = scrutateurs.stream().map(u -> DtoUtils.dto(u))
+					.collect(Collectors.toList());
 			model.addAttribute("votantsRecette", scrutateursDto);
 		}
 		model.addAttribute("scrutin", dto);
+		model.addAttribute("dateForm", new ScrutinDateForm());
+		
 		return "admin/scrutin";
 	}
 
@@ -114,7 +124,8 @@ public class AdminScrutinController extends BaseController {
 	}
 
 	@GetMapping("/scrutin-hash-save")
-	public String saveScrutinHash(@RequestParam(name = "scrid", required = true) Long scrutinId, Model model, RedirectAttributes ratt) {
+	public String saveScrutinHash(@RequestParam(name = "scrid", required = true) Long scrutinId, Model model,
+			RedirectAttributes ratt) {
 		log.info("saveScrutinHash IN " + scrutinId);
 		Scrutin scr = this.scrutinService.findScrutinById(scrutinId);
 		scr = this.scrutinService.buildAndSaveHash(scr);
@@ -126,12 +137,23 @@ public class AdminScrutinController extends BaseController {
 	}
 
 	@PostMapping("/production")
-	public String gotoProduction(@RequestParam(name = "scrid", required = true) Long scrutinId, Model model, RedirectAttributes ratt) {
+	public String gotoProduction(@RequestParam(name = "scrid", required = true) Long scrutinId, Model model,
+			RedirectAttributes ratt) {
 		log.info("gotoProduction IN " + scrutinId);
 		Scrutin s = this.scrutinService.toProduction(scrutinId);
 		log.info("gotoProduction done " + s);
 		addFlashMessage("Scrutin opérationnel", UIMessageType.INFO, true);
 		ratt.addAttribute("scrid", scrutinId);
+		return "redirect:/admin/scrutins/scrutin";
+	}
+
+	@PostMapping("/modifierDate")
+	public String modifierDate(@ModelAttribute ScrutinDateForm dateForm, BindingResult result, RedirectAttributes ratt) {
+		log.info("modifierDate IN " + dateForm);
+		this.scrutinService.modifierDateHeureScrutin(dateForm.getScrid(), dateForm.getDateDebut() + " " + dateForm.getHeureDebut(), dateForm.getDateFin() + " " + dateForm.getHeureFin());
+		log.info("modifierDate done " + dateForm);
+		addFlashMessage("Date scrutin modifié", UIMessageType.INFO, true);
+		ratt.addAttribute("scrid", dateForm.getScrid());
 		return "redirect:/admin/scrutins/scrutin";
 	}
 

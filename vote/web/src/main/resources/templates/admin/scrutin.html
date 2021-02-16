@@ -15,17 +15,28 @@
 				</div>
 			</div>
 			<div class="card-body">
+			
+				<form method="post" th:action="@{/admin/scrutins/modifierDate}">
+					<div>
+						Ouverture : 
+						<!-- <input type="text" th:field="${dateForm.dateDebut}" th:value="${#temporals.format(scrutin.dateOuverture, 'yyyy-MM-dd')}"> -->
+						<input type="date" id="dateDebut" name="dateDebut" th:value="${#temporals.format(scrutin.dateOuverture, 'yyyy-MM-dd')}">
+						<input type="time" id="heureDebut" name="heureDebut" th:value="${#temporals.format(scrutin.dateOuverture, 'HH:mm')}">
+					</div>
+					<div>
+						Fermeture : 
+						<input type="date" id="dateFin" name="dateFin" th:value="${#temporals.format(scrutin.dateFermeture, 'yyyy-MM-dd')}">
+						<input type="time" id="heureFin" name="heureFin" th:value="${#temporals.format(scrutin.dateFermeture, 'HH:mm')}">
+					</div>
+						
+						<input type="hidden" name="scrid" th:value="${scrutin.id}">
+						<button type="submit" class="btn btn-primary">Modifier</button>
+				</form>
 				<div>
-					ouverture <span
-						th:text="${#dates.format(scrutin.dateOuverture, 'dd-MM-yyyy')}"></span>,
-					fermeture <span
-						th:text="${#dates.format(scrutin.dateFermeture, 'dd-MM-yyyy')}"></span>
+					Nombre de questions : <span th:text="${scrutin.nbQuestions}"></span>
 				</div>
 				<div>
-					<span th:text="${scrutin.nbQuestions}"></span> questions
-				</div>
-				<div>
-					Hash: <a
+					Hash : <a
 						th:href="@{/admin/scrutins/scrutin-hash(scrid=${scrutin.id})}"
 						th:text="${scrutin.hash} ? ${scrutin.hash} : 'non enregistré'">
 					</a>
@@ -33,7 +44,7 @@
 				<!-- RECETTE -->
 				<div
 					th:if="${scrutin.phase == T(com.gesthelp.vote.domain.ScrutinEtat).RECETTE}">
-					Comptes votants de recette:
+					Comptes votants de recette :
 					<ul th:if="${! #lists.isEmpty(votantsRecette)}">
 						<li th:each="scrut: ${votantsRecette}"><span class="mb-2">
 								<span th:text="${scrut.mail}"></span> <span class="ml-2">mdp:

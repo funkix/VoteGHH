@@ -25,8 +25,8 @@
 						<th>Résultats</th>
 					</tr>
 					<tr>
-						<td><span th:text="${#dates.format(scrutin.dateOuverture, 'dd-MM-yyyy HH:mm')}"></span></td>
-						<td><span th:text="${#dates.format(scrutin.dateFermeture, 'dd-MM-yyyy HH:mm')}"></span></td>
+						<td><span th:text="${#temporals.format(scrutin.dateOuverture, 'dd-MM-yyyy HH:mm')}"></span></td>
+						<td><span th:text="${#temporals.format(scrutin.dateFermeture, 'dd-MM-yyyy HH:mm')}"></span></td>
 						<td><span th:text="${nbI}"></span></td>
 						<td><span th:text="${nbP}"></span></td>
 						<td><span th:text="${pourcentage}"></span> %</td>

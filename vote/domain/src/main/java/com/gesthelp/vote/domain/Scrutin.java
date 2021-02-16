@@ -1,6 +1,7 @@
 package com.gesthelp.vote.domain;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -24,9 +25,9 @@ public class Scrutin {
 	Long id;
 	String nature;
 	@Column(name = "date_heure_debut")
-	Date dateOuverture;
+	LocalDateTime dateOuverture;
 	@Column(name = "date_heure_fin")
-	Date dateFermeture;
+	LocalDateTime dateFermeture;
 	@Enumerated(EnumType.ORDINAL)
 	ScrutinEtat phase;
 	@Column(name = "date_heure_creation")

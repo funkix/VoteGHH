@@ -2,6 +2,8 @@ package com.gesthelp.vote.service;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -146,7 +148,7 @@ public class ScrutinService {
 		this.repository.setScrutinVoteDate(userId, scrutinId, new Date(), this.hashBuffer(responseHashBuffer.toString()));
 		vote = this.scrutinVoteRepository.findById(new ScrutinVoteKey(scrutinId, userId)).orElse(null);
 		if (SecurityRoles.ROLE_VOTANT.equals(utilisateur.getRole())) {
-			// on n'envoie pas aux votants de recette ...
+			// on n'envoie pas aux votants de recette...
 			try {
 				this.emailService.sendMessageAVote(utilisateur, vote.getVoteHash());
 			} catch (Exception e) {
@@ -235,6 +237,7 @@ public class ScrutinService {
 		s = this.repository.save(s);
 		return s;
 	}
+	
 	public BigDecimal nbInscrits(Long scrutinId) {
 		BigDecimal nbI = new BigDecimal(scrutinVoteRepository.nbInscrits(scrutinId));
 		return nbI;
@@ -252,6 +255,19 @@ public class ScrutinService {
 		BigDecimal pourcentage = nbParticipants.divide(nbInscrits, MathContext.DECIMAL128);
 		pourcentage = pourcentage.multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP);
 		return pourcentage;
+	}
+	
+	public Scrutin modifierDateHeureScrutin(Long scrutinId, String dateHeureDebut, String dateHeureFin){
+		Scrutin s = this.findScrutinById(scrutinId);
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		LocalDateTime dateTimeDebut = LocalDateTime.parse(dateHeureDebut, formatter);
+		LocalDateTime dateTimeFin = LocalDateTime.parse(dateHeureFin, formatter);
+		
+		s.setDateOuverture(dateTimeDebut);
+		s.setDateFermeture(dateTimeFin);
+		s = this.repository.save(s);
+		return s;
 	}
 
 }

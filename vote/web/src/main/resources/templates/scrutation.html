@@ -16,10 +16,10 @@
 					<span th:text="${scrutin.nbQuestions}"></span> questions
 				</div>
 				<div>
-					ouverture <span
-						th:text="${#dates.format(scrutin.dateOuverture, 'dd-MM-yyyy')}"></span>,
-					fermeture <span
-						th:text="${#dates.format(scrutin.dateFermeture, 'dd-MM-yyyy')}"></span>
+					Ouverture <span
+						th:text="${#temporals.format(scrutin.dateOuverture, 'dd-MM-yyyy HH:mm')}"></span>,
+					Fermeture <span
+						th:text="{#temporals.format(scrutin.dateFermeture, 'dd-MM-yyyy HH:mm')}"></span>
 				</div>
 			</div>
 		</div>
