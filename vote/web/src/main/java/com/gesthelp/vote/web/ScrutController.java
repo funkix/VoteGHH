@@ -48,7 +48,6 @@ public class ScrutController extends BaseController {
 	@GetMapping("/exportEmargReport")
 	public void exportEmargReport(HttpServletResponse response) throws Exception {
 		Long scrId = (Long) this.getSessionObject(SCRUT_SCRUTIN_ID_SESSION_KEY);
-		log.info("scrut exportEmargReport IN  scrId=" + scrId);
 		Scrutin s = scrutinService.findScrutinScrut(getUserId(), scrId);
 		byte[] file = jasperService.exportEmargementReport(s, true);
 		response.setContentType("application/pdf");

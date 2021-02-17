@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="GestHelp_vote_emargement" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ffea4b8d-237b-4955-9f20-e5d7483fec6a">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Postgres Gesthelp Vote"/>
+	<property name="background.image.path" value="recette.jpg"/>
+	<parameter name="SCRUTIN_NATURE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["NC"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SCRUTIN_IS_PRODUCTION" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[new Boolean(true)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SCRUTIN_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SCRUTIN_ROLE_UTILISATEUR" class="java.lang.String"/>
+	<parameter name="SCRUTIN_DATE_OUVERTURE" class="java.util.Date"/>
+	<parameter name="SCRUTIN_DATE_FERMETURE" class="java.util.Date"/>
+	<parameter name="SCRUTIN_COLLEGE_HASH" class="java.lang.String">
+		<defaultValueExpression><![CDATA["N.C."]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select nom, prenom, adresse, date_naissance, hash_vote, date_vote
+ from scrutin s, utilisateur_scrutin su, utilisateur u 
+ where 
+s.id = su.scrutin_id and
+su.utilisateur_id=  u.id and
+u.role = $P{SCRUTIN_ROLE_UTILISATEUR}  and 
+s.id= $P{SCRUTIN_ID}]]>
+	</queryString>
+	<field name="nom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nom"/>
+	</field>
+	<field name="prenom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="prenom"/>
+	</field>
+	<field name="adresse" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="adresse"/>
+	</field>
+	<field name="date_naissance" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="date_naissance"/>
+	</field>
+	<field name="hash_vote" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="hash_vote"/>
+	</field>
+	<field name="date_vote" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="date_vote"/>
+	</field>
+	<background>
+		<band height="639" splitType="Stretch">
+			<image>
+				<reportElement stretchType="ElementGroupHeight" x="80" y="10" width="434" height="620" uuid="c4a656ae-9e84-4766-8a4c-6bcad2c9ca36">
+					<printWhenExpression><![CDATA[!$P{SCRUTIN_IS_PRODUCTION}]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA["recette.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<title>
+		<band height="160" splitType="Stretch">
+			<staticText>
+				<reportElement x="476" y="0" width="79" height="15" uuid="192b3a93-6ff5-48c0-981e-586ddd323905"/>
+				<text><![CDATA[GEST'HELP]]></text>
+			</staticText>
+			<textField evaluationTime="Column">
+				<reportElement x="0" y="15" width="554" height="54" uuid="77f951bc-ea4e-4ae8-a2ba-1237edd474eb"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Emargement scrutin " +$P{SCRUTIN_NATURE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="0" y="79" width="200" height="15" uuid="b6ac9c54-20ee-48a3-839b-7e310fe105ca"/>
+				<textFieldExpression><![CDATA["Ouverture "+  new SimpleDateFormat("dd/MM/yyyy HH:mm").format($P{SCRUTIN_DATE_OUVERTURE})]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="0" y="94" width="200" height="15" uuid="7f058997-f65b-405c-8873-dff4490a9e79"/>
+				<textFieldExpression><![CDATA["Fermeture "+  new SimpleDateFormat("dd/MM/yyyy HH:mm").format($P{SCRUTIN_DATE_FERMETURE})]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="11" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="170" height="30" uuid="867986ea-acc4-492f-af13-bb869464c4d1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="34ce2f27-b251-4a38-83ef-7d29a79f3164"/>
+				</reportElement>
+				<textElement markup="html">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Civilité]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="470" y="0" width="74" height="30" uuid="5bc77128-6bfe-4d43-997d-de7538aa45d1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42e1a788-2a26-4a65-bd1a-cae225240d82"/>
+				</reportElement>
+				<textElement markup="html">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date du vote]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="68" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="460" height="20" uuid="6e85e83a-5652-4ef7-8ea6-ae58ae86e716">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="34ce2f27-b251-4a38-83ef-7d29a79f3164"/>
+				</reportElement>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nom}+" "+$F{prenom} +" "+( $F{date_naissance}!=null? " né(e) le "+new SimpleDateFormat("dd/MM/yyyy").format($F{date_naissance}): "")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="19" width="480" height="20" uuid="cbf8c101-8244-4f1b-bdde-479104f58d7d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="25185a17-4921-467a-94aa-8ebc160296b8"/>
+				</reportElement>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["demeurant : " + $F{adresse}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="470" y="0" width="74" height="20" uuid="02adbb72-faff-41bf-8366-2dab523a192b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42e1a788-2a26-4a65-bd1a-cae225240d82"/>
+				</reportElement>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_vote}!=null ? new SimpleDateFormat("dd/MM/yyyy").format($F{date_vote}) : "-"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="0" y="62" width="553" height="1" uuid="c7e26a23-0905-4cf6-b430-91d3067a3fcc"/>
+			</line>
+			<textField>
+				<reportElement stretchType="ElementGroupBottom" x="0" y="40" width="206" height="20" uuid="6636eecb-f7f5-46ee-be2e-795cc111d9e3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="25185a17-4921-467a-94aa-8ebc160296b8"/>
+				</reportElement>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Hash du vote : " +($F{hash_vote}!=null?$F{hash_vote}:"-")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="27" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="52" splitType="Stretch">
+			<textField>
+				<reportElement x="394" y="0" width="100" height="20" uuid="c86f7bd0-bead-4615-be1c-6b70b8adb34a"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " +$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="494" y="0" width="60" height="20" uuid="7909835a-2e86-48aa-89ad-bf30469bfe2b"/>
+				<textFieldExpression><![CDATA[" / "+ $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="0" y="29" width="200" height="20" uuid="2568f53f-a690-4722-8f82-bcf8c069982f"/>
+				<textFieldExpression><![CDATA["Généré le "+  new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="260" height="20" uuid="e60655dc-d698-4438-9200-c576934b8aad"/>
+				<textFieldExpression><![CDATA["Hash: "+ ($P{SCRUTIN_COLLEGE_HASH}!=null? $P{SCRUTIN_COLLEGE_HASH}:"-")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="36" splitType="Stretch"/>
+	</summary>
+</jasperReport>

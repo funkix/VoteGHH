@@ -2,6 +2,7 @@ package com.gesthelp.vote.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.ZoneId;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import com.gesthelp.vote.domain.Scrutin;
@@ -39,7 +41,7 @@ public class JasperService implements JasperParameters {
 	@Value("${jasper.exportPath}")
 	private String jasperExportFilePath;
 
-	public byte[] exportEmargementReport(Scrutin s, boolean recette) throws JRException, SQLException {
+	public byte[] exportEmargementReport(Scrutin s, boolean recette) throws JRException, SQLException, IOException {
 		log.info("exportEmargementReport IN " + s.getId() + " recette=" + recette);
 		Map<String, Object> parameters = this.emargementReportParams(s, recette);
 		ByteArrayOutputStream pdfOutputStream = new ByteArrayOutputStream();
@@ -49,7 +51,7 @@ public class JasperService implements JasperParameters {
 		return pdfOutputStream.toByteArray();
 	}
 
-	public void exportEmargementReportFile(Scrutin s, String fileName, boolean recette) throws JRException, SQLException {
+	public void exportEmargementReportFile(Scrutin s, String fileName, boolean recette) throws JRException, SQLException, IOException {
 		log.info("exportEmargementReportFile IN " + s.getId() + " recette=" + recette);
 		Map<String, Object> parameters = this.emargementReportParams(s, recette);
 		JasperPrint jasperPrint = JasperFillManager.fillReport(getEmargementReport(), parameters, dataSource.getConnection());
@@ -57,9 +59,8 @@ public class JasperService implements JasperParameters {
 		exporter.exportReport();
 	}
 
-	private JasperReport getEmargementReport() throws JRException {
-		JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File(jasperReportPath));
-		return jasperReport;
+	private JasperReport getEmargementReport() throws JRException, IOException {
+		return (JasperReport) JRLoader.loadObject(new ClassPathResource(jasperReportPath).getFile());
 	}
 
 	private Map<String, Object> emargementReportParams(Scrutin s, boolean recette) {
