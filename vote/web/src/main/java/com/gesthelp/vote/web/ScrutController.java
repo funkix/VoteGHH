@@ -26,6 +26,7 @@ public class ScrutController extends BaseController {
 	private ScrutinService scrutinService;
 	@Autowired
 	private JasperService jasperService;
+
 //	@Autowired
 //	private UtilisateurService utilisateurService;
 
@@ -53,4 +54,5 @@ public class ScrutController extends BaseController {
 		response.setContentType("application/pdf");
 		IOUtils.copy(new ByteArrayInputStream(file), response.getOutputStream());
 	}
+
 }

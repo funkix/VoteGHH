@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/base}">
+<head>
+</head>
+<body>
+	<div layout:fragment="page_content">
+		<div class="my-5">
+			<h1>Scrutateurs (direct)</h1>
+			<h2>
+				<span
+					th:text="${#calendars.format(#calendars.createNow(), 'dd/MM/yyyy HH:mm')}"></span>
+			</h2>
+			<div class="text-muted">Cette page est rechargée
+				automatiquement toutes les 10 secondes. Vous pouvez aussi la <a href="#" onclick="window.location.reload(true);">rafraichir manuellement</a></div>
+		</div>
+		<div th:if="${#lists.isEmpty(items)}">
+			<h3>Aucun scrutateur logué</h3>
+		</div>
+		<div th:unless="${#lists.isEmpty(items)}">
+			<table class="table">
+				<thead>
+					<td>Scrutateur présent</td>
+					<td>Heure de login</td>
+				</thead>
+				<tbody>
+					<tr th:each="scrut: ${items}">
+						<td th:text="${scrut.userMail}"></td>
+						<td><span
+							th:text="${#temporals.format(scrut.logTime, 'dd-MM-yyyy HH:mm')}"></span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="my-3" th:if="!${nbScrutsChecked}">
+			<div class="text-muted mb-2">Le nombre de scrutateurs logués
+				est insuffisant pour l'instant</div>
+		</div>
+		<div class="my-3" th:if="${nbScrutsChecked}">
+			<div class="text-muted mb-2">Le nombre de scrutateurs logués est atteint</div>
+			<button class="btn btn-primary">Résultats du scrutin</button>
+		</div>
+		<script>
+			setTimeout(function() {
+				window.location.reload(true);
+			}, 10000);
+		</script>
+	</div>
+
+</body>
+</html>

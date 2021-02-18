@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.gesthelp.vote.service.exception.DejaVoteException;
+import com.gesthelp.vote.service.exception.ScrutinNotClosedException;
 import com.gesthelp.vote.service.exception.VoteRuntimeException;
 
 import lombok.extern.java.Log;
@@ -26,9 +27,16 @@ public class ExceptionController {
 		return "error/runtimeError";
 	}
 
+	@ExceptionHandler({ ScrutinNotClosedException.class, })
+	public String error(ScrutinNotClosedException e) {
+		log.log(Level.SEVERE, "unhandled excception :", e);
+		return "error/scrutinNotClosedError";
+	}
+
 	@ExceptionHandler({ Exception.class, })
 	public String error(Exception e) {
 		log.log(Level.SEVERE, "unhandled excception :", e);
 		return "error/runtimeError";
 	}
+
 }

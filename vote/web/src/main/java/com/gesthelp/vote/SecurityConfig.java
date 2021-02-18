@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.gesthelp.vote.service.SecurityRoles;
+import com.gesthelp.vote.web.service.ScrutateurLogoutHandler;
 import com.gesthelp.vote.web.service.UtilisateurLoginService;
 
 @Configuration
@@ -24,7 +25,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 	}
-
+	@Autowired
+	private ScrutateurLogoutHandler scrutateurLogoutHandler;
+	
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
 		// @formatter:off
@@ -50,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .logout()
         	.logoutUrl("/perform_logout")
         	.logoutSuccessUrl("/")
+        	.addLogoutHandler(scrutateurLogoutHandler)
         	.deleteCookies("JSESSIONID")
         //.logoutSuccessHandler(logoutSuccessHandler());
         ;

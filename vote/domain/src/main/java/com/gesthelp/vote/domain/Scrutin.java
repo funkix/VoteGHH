@@ -40,7 +40,10 @@ public class Scrutin {
 	String hashBuffer;
 
 	Long quorum;
-	
+
+	@Column(name = "scrutateurs_nb")
+	Integer nbScrutateurs;
+
 //	@ManyToMany(mappedBy = "scrutins", fetch = FetchType.LAZY)
 //	private Set<Utilisateur> votants;
 

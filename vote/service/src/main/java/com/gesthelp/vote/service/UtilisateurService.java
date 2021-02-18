@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.gesthelp.vote.domain.Scrutin;
 import com.gesthelp.vote.domain.Utilisateur;
 import com.gesthelp.vote.repository.UtilisateurRepository;
 
@@ -42,10 +43,10 @@ public class UtilisateurService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public List<Utilisateur> findOrCreateScrutateurs(Long userId, Long scrutinId) {
-		List<Utilisateur> list = repo.findByScrutinIdAndRole(scrutinId, SecurityRoles.ROLE_SCRUTATEUR);
+	public List<Utilisateur> findOrCreateScrutateurs(Long userId, Scrutin scrutin) {
+		List<Utilisateur> list = repo.findByScrutinIdAndRole(scrutin.getId(), SecurityRoles.ROLE_SCRUTATEUR);
 		if (list == null || list.isEmpty()) {
-			list = this.createScrutateurs(userId, scrutinId, 5);
+			list = this.createScrutateurs(userId, scrutin.getId(), scrutin.getNbScrutateurs());
 		}
 		return list;
 	}

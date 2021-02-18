@@ -52,6 +52,8 @@ public class ScrutinService {
 	@Autowired
 	private UtilisateurEmailService emailService;
 
+	private final int DEFAULT_SCRUTIN_CLOSED_MINUTES_OFFSET = 5;
+
 	public Scrutin findScrutinById(Long scrutinId) {
 		return repository.findById(scrutinId).orElse(null);
 	}
@@ -237,7 +239,7 @@ public class ScrutinService {
 		s = this.repository.save(s);
 		return s;
 	}
-	
+
 	public BigDecimal nbInscrits(Long scrutinId) {
 		BigDecimal nbI = new BigDecimal(scrutinVoteRepository.nbInscrits(scrutinId));
 		return nbI;
@@ -256,18 +258,26 @@ public class ScrutinService {
 		pourcentage = pourcentage.multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP);
 		return pourcentage;
 	}
-	
-	public Scrutin modifierDateHeureScrutin(Long scrutinId, String dateHeureDebut, String dateHeureFin){
+
+	public Scrutin modifierDateHeureScrutin(Long scrutinId, String dateHeureDebut, String dateHeureFin) {
 		Scrutin s = this.findScrutinById(scrutinId);
-		
+
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime dateTimeDebut = LocalDateTime.parse(dateHeureDebut, formatter);
 		LocalDateTime dateTimeFin = LocalDateTime.parse(dateHeureFin, formatter);
-		
+
 		s.setDateOuverture(dateTimeDebut);
 		s.setDateFermeture(dateTimeFin);
 		s = this.repository.save(s);
 		return s;
 	}
 
+	public boolean isScrutinClosed(Scrutin s) {
+		return this.isScrutinClosed(s, DEFAULT_SCRUTIN_CLOSED_MINUTES_OFFSET);
+	}
+
+	public boolean isScrutinClosed(Scrutin s, int nbMinutesOffset) {
+		LocalDateTime ldt = s.getDateFermeture().plusMinutes(nbMinutesOffset);
+		return LocalDateTime.now().isAfter(ldt);
+	}
 }

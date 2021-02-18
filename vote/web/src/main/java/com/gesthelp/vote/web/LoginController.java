@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.gesthelp.vote.domain.Scrutin;
 import com.gesthelp.vote.domain.ScrutinVote;
 import com.gesthelp.vote.domain.Utilisateur;
+import com.gesthelp.vote.service.UserCacheService;
 import com.gesthelp.vote.service.SecurityRoles;
 import com.gesthelp.vote.service.UtilisateurService;
 
@@ -23,6 +24,9 @@ public class LoginController extends BaseController {
 
 	@Autowired
 	private UtilisateurService utilisateurService;
+
+	@Autowired
+	private UserCacheService cache;
 
 	@GetMapping("/login")
 	public String loginPage(Model model) {
@@ -47,6 +51,8 @@ public class LoginController extends BaseController {
 			}
 			Scrutin scrutin = votes.iterator().next().getScrutin();
 			setSessionObject(SCRUT_SCRUTIN_ID_SESSION_KEY, scrutin.getId());
+			// on garde en cache les entrees/sorties des scrutateurs :
+			this.cache.storeUser(scrutin.getId(), authentication);
 			return "redirect:/scrut/";
 		} else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(SecurityRoles.ROLE_VOTANT_RECETTE))) {
 			log.info("loginSuccess VOTANT_RECETTE case ");
@@ -60,9 +66,7 @@ public class LoginController extends BaseController {
 			Scrutin scrutin = votes.iterator().next().getScrutin();
 			setSessionObject(SCRUT_SCRUTIN_ID_SESSION_KEY, scrutin.getId());
 			return "redirect:/vote/scrutins/";
-		}
-
-		else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(SecurityRoles.ROLE_ADMIN))) {
+		} else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(SecurityRoles.ROLE_ADMIN))) {
 			log.info("loginSuccess Admin case ");
 			return "redirect:/admin/scrutins/";
 		} else {
